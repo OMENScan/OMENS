@@ -1,0 +1,1687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>OMENS (Object Monitor for Enhanced Network Security)</title>
+<link rel="stylesheet" type="text/css" href="OMENS.css" media="screen" />
+</head>
+<body>
+<div id="header">
+<h1>Object Monitor for Enhanced Network Security</h1>
+ <div id="menu">
+  <ul id="nav">
+   <li><a href="OMENS.html"> Scan </a></li>
+   <li><a href="OBlockIIS.html"> Block </a></li>
+   <li><a href="OMENSApp.html"> Honey </a></li>
+   <li><a href="#OMENSAlrm"> Alarm </a></li>
+   <li><a href="#OMENSMail"> Mail </a></li>
+   <li><a href="#OMENSDCry"> Decrypt </a></li>
+   <li><a href="#OMENSFuture"> The Future </a></li>
+  </ul>
+ </div>
+</div>
+<div id="content">
+<div id="right">
+<h2>Or simply, OMENS</h2>
+
+<p>
+  OMENS was born out of the intrusion (and intrusion attempts) analysis that I have been doing over 
+  many years.  I consistently run into intrusion attempts that existing IDS systems have difficulty 
+  detecting.  OMENS is my attempt to better detect (and understand) these blind spots in existing 
+  systems.  
+</p>
+
+
+<p>
+  OMENS is also an attempt to provide those security organizations with very tight budgets 
+  with a tool that can monitor and detect hostile activity, helping to keep their systems safe.  I 
+  have worked in many situations where the security team simply could not afford
+  the tools they needed.  I do not begrudge security companies for charging what their products are 
+  worth - but often the stakes are too high to allow important systems to remain vulnerable to attack 
+  and compromise because the budget is simply too stretched to afford all the proper tools.  One can 
+  complain about this and throw their hands up in defeat, or one can do something about it.  I have 
+  chosen to do something.
+</p>
+
+<p>
+  OMENS does not attempt to replace the technical knowledge a network defender needs to protect his/her
+  network from bad actors.  But rather to supplement and enhance it. I strongly believe that a reliance 
+  on security tools to that make too many decisions for us is to our detriment.  It allows us to become 
+  complacent , and to let our guard down.  It also - very often prevents us from using the right tool 
+  for the right job.
+</p>
+
+
+<p>
+  <b>The best security system you can buy is a Computer Security person that knows what they are 
+  doing.</b> 
+</p>
+
+
+<p>
+  OMENS simply allows a network defender to monitor server objects (Log files and The File System) for 
+  signs that hostile activity is present.  It leaves everything else up to the network defender.  OMENS
+  cannot replace good 'ol technical know-how.  But it can detect a bad actor sooner, and allow the defender
+  to react faster - To prevent, mitigate, and/or remediate security problems sooner.
+</p>
+
+
+<p>
+  <b>I call this "Moving The Timeline".</b> 
+</p>
+
+
+<p>
+  Since the very earliest versions of OMENS I have focused on adding functionality to deal with the problems 
+  of persistence, lateral movement, and the breadth of a compromise.  These are the greatest challenges when 
+  dealing with nation-state hacking.  If we cannot find every instance of compromise, the bad guys will simply 
+  return and re-establish control.  To truly remediate a compromise we must locate any dormant backdoor
+  shims that our attackers may have established.
+</p>
+
+<p>
+  OMENS is primarily a monitoring tool - but it is also a learning tool.  I created OMENS to monitor for
+  hostile activity.  But once I see that activity I then look at EVERYTHING that bad actor is doing.  
+  If I see something new, I investigate it, and develop a strategy to mitigate or remediate any newly 
+  discovered vulnerabilities.  In this way, I use OMENS to teach myself about new hacking techniques
+  and/or tools.  And thus, new ways to harden my network.  And in cases where Nation-State hacking might 
+  be involved, I can determine what the bad actors are looking for - and reconsider if I am protecting
+  those resources commensurate with their value.  I have learned an immeasurable amount about hacking 
+  by simply monitoring hackers and trying to understand the technical basis (as well as the motivations) 
+  for their attempts.  That knowledge is <b>critical</b> to properly hardening a system.
+</p>
+
+
+
+<h2>Why not use an IDS/IPS?</h2>
+
+<p>
+ You SHOULD use an IDS/IPS.
+</p>
+
+<p>
+  IDS and IPS are great tools.  So are Firewalls, Web Filters, Vulnerability Scanners, and others.  
+  But they all share an Achilles Heel.  They monitor the <b>NETWORK</b> for hostile activity.  For 
+  reasons beyond the scope of this simple OMENS help file, they CAN and DO miss some hostile activity.  
+  And the ONLY way to catch that activity is to have a security tool that RUNS ON THE SERVER ITSELF.  
+  Of course, a program running on a server also has some serious inherent weaknesses.  But running BOTH 
+  TOGETHER gives a defender the greatest visibility in to what a hostile actor may be doing on their 
+  network and their servers.
+</p>
+
+
+
+
+<h2>OMENS/OMENScan</h2>
+
+<p>
+  <i><b>Please Note: </b> OMENS is really two separate programs: <b>OMENS.exe</b> and <b>OMENScan.exe</b>. 
+  They are fundamentally the same program except for a one primary difference. <b>OMENScan.exe</b> 
+  has had all of the configuration modification options removed.  It can only Scan. 
+  This is to prevent a hostile actor from attempting to Re-Hash, Re-Sign, Re-FingerPrint, 
+  Re-Map, or otherwise modify the OMENS configuration.  <b>OMENS.exe </b> should 
+  be kept on a separate thumb drive and used only when re-configuration is needed.  For regular daily 
+  use only <b>OMENScan.exe</b> should be used.  Both will perform OMENS scanning, but since <b>OMENScan.exe </b>   
+  cannot Hash, Sign, FingerPrint, or Map - it is much less likely to be abused by a hostile actor.</i><br<br>
+</p>
+
+
+<p>
+  Also, <B>OMENS.exe</b> will write it's files to the <b>current working directory</b>. This is so that 
+  <b>OMENS.exe</b> can be loaded on a thumb drive to be used as an investigative or forensics tool.  
+  And different output can be directed to different directories (the current working directory).  
+  <b>OMENScan.exe</b> in contrast will always write it's files to the <b>C:\OMENS</b> directory.  
+  This is a design decision that ensures that all OMENS files are consistent and can be found in a 
+  specific directory - which can also be protected using OS permissions settings.
+</p>
+
+
+<p>
+  OMENScan (and OMENS) is a essentially nothing more than a glorified FIND command.  It is
+  best used in the Windows scheduler, to run a couple times a day <i>(more often is your server has very 
+  active hostile activity)</i>, and to search for signs that hostile activity is present.
+</p>
+
+
+<p>
+  It does this by scanning both the Log File, and the File System itself for hostile signatures.  In an IIS  
+  Web Server this would be the IIS Log File (usually C:\inetpub\logs\Logfiles\W3SVC1\xxxxxxxx.log), 
+  and the Web Root (usually C:\Inetpub\wwwroot).
+</p>
+
+
+<p>
+  <b>Please note: </b><i> I have been asked why I don't make OMENS a Windows Service.  This would be easy 
+  to do, but it opens OMENS up to possible in-memory modification and hacking.  The forensics guys tell 
+  me that this is becoming fairly common in more advanced nation-state hacking.  So in order to try to 
+  mitigate this threat I have chosen to write OMENS in such a way that it runs best when using the 
+  Windows Scheduler.</i>
+</p>
+
+
+<h2>Configuration and Run-Time (arguments) options</h2>
+
+
+<p>
+  OMENS uses a local SQLite configuration database to determine how it will run, and what it 
+  will scan for.  That configuration database is called <b>OMENScan.db</b> by default.  But it can 
+  be changed via the OMENScan command line.  In fact, I run multiple configuration files searching for different 
+  combinations in my environment.
+  <br><br>
+  <b>Note: </b><i>Remote configuration files will still remain standard text files.</i>
+
+</p>
+
+
+<p>
+  <b>The OMENScan command can be run with the following arguments:</b>
+</p>
+
+
+<p>
+  <b>OMENScan /Log:</b>&lt;Name of input Log File&gt; <br>
+           <b>/Ini:</b>&lt;Name of input Config File&gt; <br>
+           <b>/Out:</b>&lt;Name of Output File&gt; <br>
+           <b>/Verbose</b> <br>
+           <b>/DeepDive</b> <br>
+           <b>/Help</b> <br>
+</p><br>
+
+
+<p>
+  <b>The OMENS command can be run with the same arguments as OMENScan, and adds the following arguments:</b>
+</p>
+
+
+<p>
+  <b>/MD5:</b>&lt;A Password&gt; <br>
+  <b>/MAP</b> <br>
+  <b>/FingerPrint</b> <br>
+  <b>/Sign</b> <br>
+
+  <b>/Passwd</b> <br>
+  <b>/Config</b> <br>
+  <b>/Alarms</b> <br>
+
+  <b>/JIBMerge</b> <br>
+  <b>/OMNMerge</b> <br>
+
+</p>
+
+
+<h2>/Help</h2>
+
+<p>
+  The <b>/Help</b> parameter will simply display this help file in your browser.  
+</p>
+
+
+
+<h2>/MD5:</h2>
+
+<p>
+  The <b>/MD5:</b> parameter will simply generate an OMENScan unique hash of the password you enter.  This function uses MD5 
+  as it basis, but has been hardened to be resistant against Rainbow Table attacks by using known countermeasures.  
+</p>
+
+
+<p>
+  Once the HASH is generated it can be entered in to the OMENScan.db file to manually update the OMENS password.  Under 
+  normal use, one should never need to do this.  But I have made this available, in case a power-user wants to manually 
+  modify the OMENS configuration database.
+</p>
+
+
+<p>
+  This hash is used for two primary OMENS security functions.  The first is to password protect critical OMENS configuration 
+  functions (Mapping, Fingerprinting, Signing, etc...).  This helps to prevent unauthorized modifications of the OMENS configuration 
+  database.  The HASH is also used as the basis for encrypting OMENS output log data when transmitting it on
+  a secure network.  This helps to keep a possible attacker in the dark about what you know about their activity.
+  Thus giving you a slight edge in reacting faster than your attacker.
+</p>
+
+
+<h2>/Map</h2>
+
+<p>
+  The <b>/Map</b> parameter generates a file mapping of the <b>FileRoot</b> directory, any <b>DirCheck</b>
+  directories, and all subdirectories under them
+  (see explanation below).  OMENS will use this map to determine whether new files have been added, changed, or deleted.
+  You will need your original HASH password to generate a map.  <br><br>
+
+
+  <b>Please Note: </b><i>This mapping can be autogenerated by setting the OMENS <b>FCSCan</b> option to <b>Auto</b></i><br><br>
+
+
+  If the OMENS <b>FCScan</b> option is not set to <b>Auto</b> OMENS will not update this map automatically.  
+  ie. You must do it manually using the <b>/Map</b> option - otherwise any new files added to the <b>FileRoot</b> 
+  or any of the <b>DirCheck</b> directories,
+  will be reported by OMENS every time it runs.  This is by design - so that OMENS can report any new files added or 
+  any files changed or deleted - whether it was accidentally, done by the developer, or uploaded by a hostile actor.  
+  This is admittedly a bit cumbersome, but it ensures that any new or modified web server files are always accounted 
+  for.<br><br>
+
+  <b><i>Please Note: </b> The File Map is used when <b>FCheck:FileInfo</b> is set in the OMENS configuration file.  
+  This will check if the file(s) size, creation date, or modification date has changed.  Since file information is 
+  often modified by a bad actor, to hide their tracks, this is only meant as a quick check.  For a more extensive 
+  check of the file system please use the <b>FCheck:FingerPrint</b> option.  Fingerprinting is much more thorough, 
+  but takes significantly more time (because the entire file has to be read each time).  A good balance is to run 
+  <b>FCheck:FileInfo</b> during the day, and to do an extensive check every night with <b>FCheck:FingerPrint</b></i>.
+</p>
+
+
+<h2>/Fingerprint</h2>
+
+<p>
+  The <b>/Fingerprint</b> parameter generates a full Fingerprint mapping of the <b>FileRoot</b> directory, any 
+  <b>DirCheck</b> directories, and all subdirectories under them
+  (see explanation below).  OMENS will use this FingerPrint to to determine whether any files 
+  have been changed, or if new files have been added or deleted.  You will need your original HASH password to generate 
+  a full fingerprint map. <br><br>
+
+
+  <b>Please Note: </b><i>This mapping can be autogenerated by setting the OMENS <b>FCSCan</b> option to <b>Auto</b></i><br><br>
+
+
+  If the OMENS <b>FCScan</b> option is not set to <b>Auto</b> OMENS will not update this fingerprint map automatically.  
+  ie. You must do it manually using the <b>/Fingerprint</b> option - otherwise any new files added to the <b>FileRoot</b>
+  or any of the <b>DirCheck</b> directories,
+  will be reported by OMENS every time it runs.  This is by design - so that OMENS can report any new files added or 
+  any files changed or deleted - whether it was accidentally, done by the developer, or uploaded by a hostile actor.  
+  This is admittedly a bit cumbersome, but it ensures that any new or modified web server files are always accounted 
+  for.  FingerPrinting large <b>FileRoot</b> or <b>DirCheck</b>
+  directories, with many large files can take a long time, since each file MUST be read 
+  and fingerprinted.  <b><i>Please be patient when using this option.</b></i>
+</p>
+
+
+<p>
+  OMENS wil also inspect each new (or changed) file it finds for hostile signatures. These signatures are defined using 
+  the <Font Color=Maroon><b>FileContent</b> table</Font> in the OMENScan.DB file (see description below)
+</p>
+
+
+<h2>/Sign</h2>
+
+<p>
+  Under typical use OMENS will digitally sign the OMENScan database(s) and Tables, including the 
+  <Font Color=Maroon>Configuration and Alarm tables, the FileRoot/DirCheck Mapping table, and 
+  the FileRoot/DirCheck FingerPrint table.</Font>
+</p>
+
+
+<p>
+  OMENS expects the database(s) and tables to be digitally signed, and will not run with un-signed files.
+  This is normally done automatically by OMENS.  But if you manually modify the OMENScan.db it must be Signed 
+  manually using the <b>/Sign</b> parameter.  You will need your original HASH password to sign the
+  database and its tables.
+</p>
+
+
+<p>
+  Database Signing is used to help detect tampering of OMENS database files by a bad actor.  Of course a bad 
+  actor who has gained complete control of the server could generate a new HASH and then re-map, 
+  and re-sign all of the configuration files.  But they 
+  cannot know your original HASH password.  Since OMENS encrypts the output report with the HASH - an 
+  IT Security person can still passively detect tampering through the side-chain: That is - If the receiver 
+  of the OMENS report cannot Decrypt the report - It may indicate that the HASH (password) has been improperly 
+  changed, and/or the OMENS configuration files improperly modified.
+  This scenario is extremely unlikely - but possible.  Therefore, if there are problems decrypting the
+  OMENS output, it may be reasonable to assume that the server has been compromised and should be 
+  thoroughly checked <i>(of course the other possibility is that the password was simply forgotten)</i>.
+</p>
+
+
+<p>
+  <hr>
+  <b>Important Note:</b><br>
+
+  I have made every effort for OMENS to auto-sign it's configuration database.  There should
+  be very little reason to manually sign the OMENS database.  This function is still available for those
+  power users that want to edit the OMENS configuration database manually (after which it must be re-signed) - 
+  But there should be little need to do so.
+  <hr>
+</p>
+
+
+<h2>/Passwd</h2>
+
+<p>
+  /Passwd is a simple function that allows you to change your OMENS configuration database password (HASH).
+</p>
+
+
+<h2>/Config</h2>
+
+<p>
+  /Config is a simple function that allows you to modify the most common OMENS configuration database options.  
+  Not all OMENS configuration options are available with the /Config parameter, but the few options that are 
+  not available would be options that should only be changed under very unusual conditions. Please contact me
+  directly if you would like instructions on how to modify these more obscure options.
+</p>
+
+
+<h2>/Alarm</h2>
+
+<p>
+  /Alarm is a simple function that allows you to modify the OMENS Alarms.
+</p>
+
+
+<h2>/JIBMerge</h2>
+
+<p>
+  /JIBMerge will import the CERT JIB into OMENS to scan for the Indicators Of Compromise published by CERT.  You must 
+  contact US-CERT to receive the JIB.  Once you receive the file from US-CERT, it must be renamed to <b>CERT.JIB</b> and 
+  placed into the OMENS <b>DB</b> directory. You can then run the <b> OMENS /JIBMerge</b> command to import the JIB into 
+  OMENS.
+</p>
+
+<p>
+  After you have imported the CERT-JIB it will no longer be needed.  If you receive a new CERT JIB from US-CERT, you 
+  can then copy it to the <B> OMENS DB </b> directory as <b>CERT.JIB</b> and repeat the process.  OMENS can import 
+  the JIB as many times as you like, and OMEN will check for duplicates.  
+</p>
+
+
+<p>
+  <i><b>IMPORTANT NOTE(S): </b> OMENS will convert the individual CERT JIB IP addresses to a class C subnet and will only 
+  search on the 1st 3 octets.  This is to help cut down on the number of search entries, while increasing the liklihood
+  of detecting a hostile IP Address on a known hostile subnet.  It may cause false positives, but it allows OMENS to 
+  cast a wider detection net.<br><br>
+
+  All CERT JIB signatures will also be imported with the "Not Sharing" flag.  This is to avoid accidentally sharing 
+  CERT information using OMENShare.  If you want to OMENShare CERT JIB information, you will need to edit and re-sign
+  your OMENS database manually.</i>
+</p>
+
+
+<h2>/OMNMerge</h2>
+
+<p>
+  /OMNMerge will import signatures from the OMENS JIB (Flat file) into the OMENS Database(s) to scan for Indicators Of 
+  Compromise.  The OMENS JIB is simply a flat file in OMENS format that can be shared amongst OMENS users, and imported 
+  into individual OMENS databases.  I will be publishing some OMENS JIB files for anyone to use.  Please note - In order
+  to import an OMENS JIB file, it must be renamed to <b>OMENS.JIB</b> and 
+  placed into the OMENS <b>DB</b> directory. You can then run the <b> OMENS /OMNMerge</b> command to import the JIB into 
+  OMENS.
+</p>
+
+<p>
+  After you have imported the OMENS-JIB it will no longer be needed.  If you create or receive a new OMENS JIB, you 
+  can then copy it to the <B> OMENS DB </b> directory as <b>OMENS.JIB</b> and repeat the process.  OMENS can import 
+  the JIB as many times as you like, and OMEN will check for duplicates.
+</p>
+
+
+<p>
+  <i><b>IMPORTANT NOTE: </b> OMENS will convert the individual OMENS JIB IP addresses to a class C subnet and will only 
+  search on the 1st 3 octets.  This is to help cut down on the number of search entries, while increasing the liklihood
+  of detecting a hostile IP Address on a known hostile subnet.  It may cause false positives, but it allows OMENS to 
+  cast a wider detection net.</i>
+</p>
+
+
+
+
+
+<h2>Scanning</h2>
+
+
+<p>
+  By default OMENScan will look for the most recent IIS log.  If you are not running IIS, or you want to scan 
+  a different log, you can use the <b>/Log:</b> parameter.  OMENScan will also generate a unique output file
+  which you can change using the <b>/Out:</b> parameter.
+</p>
+
+
+
+<p>
+  <b>The primary configuration for OMENScan is the <Font Color=Maroon><b>Config</b> Table</Font> 
+  in the OMENScan.db file.  Here are the parameters it can contain:</b>
+</p>
+
+
+<p><b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Encrypt<br>
+ ParmValue=Yes|No
+</b><br>
+This Parameter specifies whether to encrypt the output file or not.  
+
+OMENS uses a built-in stream cipher algorithm (ARC4). OMENS internal stream cipher (ARC4) is a Symmetric 
+encryptor - That is, the same password is used to Encrypt AND Decrypt a file.  This makes it inherently 
+vulnerable to exploitation in any automated system.  To help mitigate against attack, OMENScan uses an 
+"interim HASH" (See the /MD5: command line parameter) to generate a second HASH to encrypt the file.<br><br>
+
+
+<b>PLEASE NOTE: If an attacker gets the Interim HASH AND knows the algorithm to generate the second
+hash, they CAN decrypt your output file.  For those concerned about this, an unpublished OMENS 
+configuration parameter allows a PBKDF2 style loop count, to further complicate the task of decrypting 
+the output file.</b><br><br>
+
+
+However - My feeling about that is this: If an attacker can get the interim HASH from your config file, 
+they already PWN you, and it's probably game-over.  So you will have to change everything anyway.
+This is one of the inherent weaknesses of any host-base monitoring system - and why OMENScan should 
+be used as ONE TOOL in your arsenal of security tools.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Hash<br>
+ ParmValue=Interim Encryptor HASH
+</b><br>
+This is the Interim HASH that OMENScan will use to generate a second HASH that will be used as the 
+encryption password for the Log File encryptor.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Email<br>
+ ParmValue=Yes|No</b><br>
+Email the Log File?<br><br>
+
+
+<a name=OMENSMail></a>
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Mailer<br>
+ ParmValue=C:\OMENS\OMENSMail.exe</b><br>
+Location of the OMENSMail program.  Or you can use your own command line mailer if you like.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=MType<br>
+ ParmValue=Include|Attach</b><br>
+Attach or Include the output log file in your email?  <b>Attach</b> will make the logfile a MIME 
+attachment. <b>Include</b> makes the output log file part of the text of the email.  If you
+are encrypting the log, you will have to use <b>Attach</b>.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=SMTP<br>
+ ParmValue=nn.nn.nn.nn</b><br>
+IP Address of your SMTP Mail Server.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=SMTPFrom<br>
+ ParmValue=&lt;Mail From email address&gt;</b><br>
+Email address of Sender.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=SMTPTo<br>
+ ParmValue=&lt;Mail To email address&gt;</b><br>
+Email address of recipient<br><br>
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=SMTPCC<br>
+ ParmValue=&lt;Mail To (CC:) email address&gt;</b><br>
+Email address of CC: recipient (you can have 10 of these)<br><br>
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=AuthID<br>
+ ParmValue=&lt;Bas64 encoded Email Id&gt;</b><br>
+Does your SMTP server require authentication?  This is the UserId Base64 encoded.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=AuthPW<br>
+ ParmValue=&lt;Bas64 encoded Email Password&gt;</b><br>
+Does your SMTP server require authentication?  This is the Password Base64 encoded.<br><br>
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Syslogx<br>
+ ParmValue=Yes|No</b><br>
+OMENS will log some of it's output to a *NIX Syslog server if this is set to yes.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Syslogd<br>
+ ParmValue=nn.nn.nn.nn</b><br>
+The IP Address of the Syslog Daemon.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Syslogp<br>
+ ParmValue=nnn</b><br>
+The Port of the Syslog Daemon (Usually port 514).<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Debug<br>
+ ParmValue=Yes|No|Quiet</b><br>
+Self explanatory ;-)  <i><b>Please Note: </b>This is the same thing as the <b>/Verbose</b> command line option.</i><br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=DeepDive<br>
+ ParmValue=Yes|No</b><br>
+Sometimes you will want to see ALL the activity for the IP addresses that are sending hostile traffic.  By turning 
+<b>DeepDive</b> on OMENS will report on ALL the activity for any IP address that has been found to be sending
+hostile traffic.  There are many good reasons to do this, such as:<br><br>
+
+1. To see what else the hostile actor might be attempting.<br>
+2. To gain more insight into exactly what they are looking for.<br>
+3. To see if OMENS may have missed a hostile signature that might be added to future scans.<br><br>
+
+<i><b>Please Note: </b>This is the same thing as the <b>/DeepDive</b> command line option.</i><br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=WhoAmI<br>
+ ParmValue=&lt;Just a free form string that is used as a report title &gt;</b><br>
+If you have more than one server using OMENScan - This will help you separate them.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=LogsRoot<br>
+ ParmValue=&lt;Location of Log Files&gt;</b><br>
+Self explanatory.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=FileRoot<br>
+ ParmValue=&lt;Web Root to search for hostile files&gt;</b><br>
+This is the root of where we want to search for hostile files.  In many cases a bad actor will
+upload files to a compromised server.  These are typically reconnaissance programs or scripts
+that allow them to gain further entry into OTHER SERVERS on the network.  OMENScan can enumerate
+and search this directory and all sub-directories for these files.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=DirCheck<br>
+ ParmValue=&lt;Additional Directory Root to search for hostile files&gt;</b><br>
+This is an additional Directory root of where we want to search for hostile files.  
+There can be many cases in which we want to search (multiple) other Directories for hostile 
+files: You may want to monitor the Web Server's Program directory for modifications to the Web 
+Server itself, or you may have added other Virtual Directories to your virtual web root using 
+other file system directories which 
+are not directly under the <b>FileRoot</b> in the file system. In some cases a bad actor may
+upload or modify files in these other directories.  These are typically reconnaissance programs or scripts
+that allow them to gain further entry into OTHER SERVERS on the network.  OMENScan can enumerate
+and search this directory and all sub-directories for these files.<br><br>
+
+<i><b>Please Note: </b>OMENS supports an unlimited number of <b>DirCheck</b> directories.</i><br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Delim<br>
+ ParmValue=&lt;One Character Delimiter&gt;</b><br>
+This option tells OMENS what the log parsing delimeter is.  Under normal circumstances
+Web Logs are typically delimited by a single blank (Hex 20).  But your logs may be delimited
+with a comma, pipe, or other special character.  In most cases you will not need to define
+the delimiter since OMENS will default to a single space.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=LogField<br>
+ ParmValue=&lt;Name Of Field&gt;<br>
+ ParmParm=&lt;Parse Field Number (See: Delim Parameter above)&gt;</b><br>
+This option defines the Parsed fields in the OMENS log search.  This allows OMENS to be extremely 
+flexible when searching the log(s).  For instance you can define a field named "SourceIP" in 
+field/column 5 and "DestIP" in field/column 6.  These field names can then be used in the OMENS signatures 
+to search for specific data in specific fields.  Fields are delimited using the Delim character
+(see above) and Field Names are limited to 9 characters.
+<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=clientIPIndx<br>
+ ParmValue=&lt;The Field Number of the Client IP&gt;<br>
+ ParmParm=&lt;N/A&gt;</b><br>
+This option defines the Field that the Client IP is located in.  OMENS uses this field to do other 
+analysis and processing.  In an IIS Log this is typically field#9 and in Apache Access Logs this is 
+typically field#1. This field can also be set to -1 if you want to bypass source IP processing and 
+analysis.  This can be useful if you are analyzing logs that do not contain the source IP Address.
+<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=FCheck<br>
+ ParmValue=FileInfo|FingerPrint</b><br>
+This option tells OMENS whether to use the FileRoot/DirCheck 
+Map to check for file changes using the file dates and sizes <b>(FileInfo)</b> or to use the 
+more thourough FileRoot/DirCheck <b>FingerPrint</b> Map to aggresively scan the files themselves for 
+changes.<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=FCScan<br>
+ ParmValue=New|All|Auto</b><br>
+Thanks go to my friend Rick Smith for this great idea.  This option 
+allows an investigator to run <b>OMENS.exe</b> from a thumb drive to inspect ALL files in the 
+FileRoot/DirCheck directories for the <b>FileContent</b> hostile signatures.  This can be useful 
+when a server is suspected of compromise (and it has not been fingerprinted), and all files in 
+the FileRoot/DirCheck directory and it's 
+subdirectories should be scanned for hostile content.  The default for OMENS is to inspect 
+any <b>New</b> files.  Using <b>FCScan:All</b> tells OMENS to scan ALL files. These files 
+WILL NOT be added to the OMENScan database. That is: Every time you run OMENScan these files will
+always be reported and scanned for hostile content until you Re-Map or Re-Fingerprint<br><br>
+
+Optionally, using <b>FCScan:Auto</b> tells OMENS to scan for any new files just once, inspect them, and then auto-add
+them to the database (so they will not be considered new anymore).<br><br>
+
+<b>PLEASE NOTE: When using FCScan:Auto - Any files that are found to contain hostile content ARE NOT
+auto-added.  This is to make SURE that the IT Security group gets reminded over and over that a 
+file contains possible hostile content, and to ensure that a clandestine run of OMENScan will not 
+auto-add the suspect file, and bypass further notifications.  Let me say right here that FCScan:Auto
+is a great feature - but it CAN decrease the effectiveness of OMENS.</b><br><br>
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Logscan<br>
+ ParmValue=&lt;Resume | Reset&gt;</b><br>
+OMENScan Log Scanning can be done in two different modes:  <b>Resume</b> tells OMENScan 
+to pick up where it left off and scan only new log file entries.  This is very useful when
+OMENS <b>Alarms:</b> have been configured - to ensure that OMENScan doesn't keep alarming over 
+and over again on the same log entries.  <b>Reset</b> is more useful if you want to see all of the 
+hostile log entries for the day.  Typically OMENSCan reporting would use a <b>Reset</b> run at the 
+beginning of the day with NO ALARMS, followed by several <b>Resume</b> OMENScan runs WITH ALARMS 
+throughout the day.  You can experiment with what fits best
+in your environment.  I find that running OMENScan with <b>Reset</b> and NO ALARMS at the 
+end of each day give me a nice full-days report of possible hostile activity.
+<br><br>
+
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=BadIPLog<br>
+ ParmValue=&lt;None | Log | XML | HTA&gt;</b><br>
+OMENScan will generate a file of IP Addresses that should be blocked.  This file can be used 
+as input to other programs to block at the Server, Web Server, or Web Application Levels.  In
+order to make this as simple and flexible as possible, OMENS can be configured to generate a standard 
+Log type file with only IP addresses in it <b>(Log)</b>, a standard IIS XML security file <b>(XML)</b> 
+which can be processed by IIS, or an Apache .htaccess <b>(HTA)</b> style file that can be processed by apache.
+By default this file is written to the current OMENS working directory.  But the output directory
+and file name can be changed by adding them to the <b>ParmParm</b> column of the <b>BadIPLog</b>
+parameter.
+<br><br>
+
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=OMENShare<br>
+ ParmValue=&lt;Sig, Fil, FCS, MD5, IPA, VTL&gt;<br>
+ ParmParm=&lt;Optional Name & Directory of the File&gt;</b><br>
+OMENScan can Auto-Generate a Shared Signature File.  This is an OMENS Signature file consisting 
+of all the hostile signatures it detected in the last 30 days.  This file can be used as input into 
+OMENScan running on other servers by setting them to use this file as a Remote Signature file.<br><br>
+
+The ParmValue allows OMENS to Generate <b>Sig, Fil, FCS, IPA, MD5, or VirusTotal(MD5)</b> detected shared signatures. By 
+setting the ParmValue field to any multiple of the Keywords, the shared signatures can be controlled.
+<br><br>
+
+<b>Sig </b> - Detected Hostile LogFile Signatures<br>
+<b>Fil </b> - Detected Hostile File Names<br>
+<b>FCS </b> - Detected Hostile File Content<br>
+<b>MD5 </b> - Detected Files with Hostile MD5 Signatures<br>
+<b>IPA </b> - Detected Hostile IP Addresses (Note: This will be added as a <b>Sig</b> (Logfile) signature with an IP Address)<br>
+<b>VTL </b> - Detected Files with at least one positive in VirusTotal (MD5)<br><br>
+
+This can be an extremely powerful feature to allow multiple servers to share with each other hostile
+signatures that were detected.  It can also be a very dangerous feature that can allow a bad actor
+to see the vulnerabilities that OMENS may have found on the server.<br><br>
+
+<b><i>I cannot stress enough how important it is to understand the implications before implementing
+this OMENS feature (which is NOT enabled by default).<br><br></b></i>
+
+I do not recommend indiscriminately using this feature to share Auto-Generated signatures publicly, 
+but rather to share only within the Intranetwork to let OMENS detect both lateral movement and 
+targeted scanning by hostile actors on multiple servers.<br><br>
+
+By default the Shared Signatures file name is <b>OMENShare.txt</b> and it is written to the current 
+OMENS LOG directory.  However the output directory and file name can be changed by adding them to 
+the <b>ParmParm</b> column of the <b>OMENShare</b> parameter.
+<br><br>
+
+<b><i>If you choose to enable the OMENShare feature - PLEASE use it carefully.<br><br></b></i>
+
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=BadHTML<br>
+ ParmValue=&lt;None | Log | Hide | Quarantine&gt;</b><br>
+OMENScan can also actively block any hostile files it finds in the WebRoot.  Four(4) 
+different actions can be taken dependent upon your preferred configuration.  <br><br>
+
+Using the <b>Log</b> parameter OMENS will generate a file:<br><br>
+
+<b>C:\OMENS\Logs\BadHTML.log</b><br><br>
+
+This file can be used as input to other programs to block at the Server, Web Server, or Web 
+Application Levels.  <br><br>
+
+The next Option is the <b>Hide</b> Option.  This will simply set the 
+file attribute to hidden.  IIS supports this attribute and will not display or run the file
+if it is hidden.  This option however, does not work with Apache.  <br><br>
+
+So OMENS offers another 
+option: The <b>Quar</b>antine option.  This option will copy the hostile file into:<br><br>
+
+<b>C:\OMENS\Quar</b><br><br>
+
+giving it a numbered prefix (0000 - 0999).<br><br>
+
+
+The file will then be deleted from it's original location under the WebRoot.<br><br>
+
+<b>Important Note: </b><i>Please ensure that OMENS is running with the proper file/directory 
+permissions to delete and copy these files. OMENS quarantine will not work properly if it does
+not have the proper permissions.</i>
+<br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=Exit<br>
+ ParmValue=&lt;Name Of a Batch File in C:\OMENS to run after completion&gt;</b><br>
+I've missed something you REALLY want to do with OMENScan.   I already know that. So I have 
+added the ability for you to further process both the Input and Output files.  You can create
+a Batch file in C:\OMENS that will run after OMENScan has completed.  It will pass the names 
+of the input and output files to this batch file so you can extend OMENScan even more.<br><br>
+
+<b><i>Important Note:</i></b><br>
+OMENS is generally paranoid about itself.  This is because the server it is running on might 
+be compromised.  So OMENS Fingerprints its own files, including the Exit Batch File.  If you 
+change the Exit Batch File in any way, OMENS will no longer run it.  To tell OMENS these 
+modifications are OK, you will need to run <b>OMENS /Config</b>.  You do not need to make any
+changes.  Simply review each setting, press enter, and OMENS will then Re-Fingerprint the 
+OMENS Exit Batch File.
+<br><br>
+
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=VirusTotal<br>
+ ParmValue=&lt;Yes | No&gt;<br>
+ ParmParm=&lt;Your VirusTotal API Key&gt;</b><br>
+OMENScan can query the <a href=https://www.virustotal.com>VirusTotal</a> database to see if any 
+<b>new or changed</b> files are known malware.  VirusTotal is an amazing and free service that 
+analyzes suspicious files against 
+<a href=https://www.virustotal.com/en/about/credits/>several dozen Anti Virus engines.</a>   
+<br><br>
+
+As of version 2.0 OMENScan can also query the <a href=https://www.virustotal.com>VirusTotal</a> 
+database to see if any of the suspected IP Addresses found in the log scan have been reported
+as hostile by other VirusTotal users.  This gives OMENS users additional intel on the hostile
+IP Addresses that may be scanning or attacking their server(s).
+<br><br>
+
+
+
+All you need to integrate VirusTotal with OMENS is a VirusTotal API Key (which you will then 
+need to enter into the OMENS database). 
+<a href=https://www.virustotal.com>VirusTotal</a> API Keys are free, and easy to get.  Simply 
+<a href=https://www.virustotal.com/en/#signup> Register </a> in the VirusTotal community. 
+Please Note: If you will be checking a lot of files, please contact VirusTotal to increase the
+number of scans you can do per minute. They are incredible easy and responsive to work with. 
+<br><br>
+
+You can also share the MD5s and IP Addresses that VirusTotal detects as malicious with others 
+using the  <b>OMENShare VTL </b> option (see OMENShare above). 
+<br><br>
+
+<b>Important Note:</b> OMENS WILL NOT UPLOAD YOUR FILES TO VIRUSTOTAL.  OMENS will only scan
+to see if the MD5 signatures of new/changed files are ALREADY in the VirusTotal database. OMENS
+does not upload files due to the risk of accidentally uploading files that should not be shared. 
+However, if you suspect a file might be malware, please consider uploading it to VirusTotal 
+to increase their detection database, and help others.
+<br><br>
+
+
+</p>
+
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=ShadowServer<br>
+ ParmValue=&lt;Yes | No&gt;<br></b><br>
+As of Version 2.1 OMENScan can query the <a href=http://bin-test.shadowserver.org/>ShadowServer Bin Check Service</a> 
+database to see if any <b>new or changed</b> files are known-good binaries.  ShadowServer is 
+another amazing and free service.  The ShadowServer Bin Check Service aggregates known-good hashes from several sources 
+and makes them available via a simple HTTP query (JSON).
+<br><br>
+
+
+When configured properly, OMENS can use this great service to determine if a new or changed file is known to be good
+(even if it contains some questionable content).
+<br><br>
+
+
+
+<b>Important Note:</b> PLEASE check <a href=http://www.shadowserver.org/wiki/pmwiki.php/Shadowserver/TermsOfService>
+ShadowServers Terms Of Service</a> before you configure this option. WE are very grateful for these free services and
+we ask that you use them in accordance with their Terms Of Service.
+<br><br>
+
+
+</p>
+
+
+
+<h2>OMENScan Signature Database Tables</h2>
+<p>
+  OMENScan uses several Tables in the OMENScan database to search for hostile or dangerous content.
+</p>
+
+
+<p>
+
+<b>
+ <Font Color=Maroon>Table=LogFileSig</Font><br>
+ LogSig=&lt;Strings to look for in the input log file&gt;<br>
+ LogDsc=&lt;Description of Signature&gt;<br>
+ LogFld=&lt;Name of the Field to search (See LogField configuration above)&gt;<br>
+ Share=&lt;Y | N&gt;<br>
+ Weight=&lt;Severity Of the Signature (0-99) - Note: 0 Means report only, No Action&gt;</b><br>
+
+
+OMENScan can look for 9,999 hostile signatures per database.  These "signatures" are simply strings/keywords 
+that OMENScan will look for in the input log file.  It seems like such a simple idea.  But the fact is that 
+attackers use the SAME METHODS OVER AND OVER AND OVER AGAIN to compromise vulnerable systems.  This elegant 
+little idea lets OMENScan alert the defender of this common hostile activity.<br><br>
+
+The <b>Share</b> entry allows granular sharing of signatures using OMENShare.  The <b>Weight</b> entry 
+allows each signature to have a severity level from 0-99. For signatures you simply want to report on - Make the
+<b>Weight</b> 0.  This will ensure that the signature does not cause OMENS to quarantine or report the signature
+as hostile. OMENS assumes that any signature with a <b>Weight</b> of 0 is informational only <br><br>
+
+
+<i><b>Note:</b> OMENS supports the wildcards "*" & "?" - My gratitude to David Gilliam 
+for this great suggestion!</i><br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=LogFileNot</Font><br>
+ LogNot=&lt;False Positive Strings to look for in the input log file&gt;<br>
+ LogFld=&lt;Name of the Field to search (See LogField configuration above)&gt;</b><br>
+Unfortunately some activity that might LOOK hostile is not.  OMENScan allows 9,999 
+False Positive strings per database - to increase the Signal to Noise Ratio.<br>
+<i><b>Note:</b> OMENS supports the wildcards "*" & "?" - My gratitude to David Gilliam 
+for this great suggestion!</i><br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=FileNameSig</Font><br>
+ FNMSig=&lt;Strings to look for in the scanned FileRoot/DirCheck directories (See above)&gt;<br>
+ FNMDsc=&lt;Description of Signature&gt;<br>
+ Share=&lt;Y | N&gt;<br>
+ Weight=&lt;Severity Of the Signature (0-99) - Note: 0 Means report only, No Action&gt;</b><br>
+
+OMENScan allows 9,999 File Names per database to be searched.  OMENScan will enumerate 
+and expand all files in the FileRoot/DirCheck directory and it's sub-directories. So the <b>FileNameSig</b> 
+table can be used to look for not only File Names but Directory Names too!  Many times a bad actor
+will upload hostile files or sub-directories on multiple server - but these names often stay the same.  
+Searching for known malicious file names or directory names can alert a defender to a compromised server.<br><br>
+
+The <b>Share</b> entry allows granular sharing of signatures using OMENShare.  The <b>Weight</b> entry 
+allows each signature to have a severity level from 0-99. For signatures you simply want to report on - Make the
+<b>Weight</b> 0.  This will ensure that the signature does not cause OMENS to quarantine or report the signature
+as hostile. OMENS assumes that any signature with a <b>Weight</b> of 0 is informational only <br><br>
+
+<i><b>Note:</b> OMENS supports the wildcards "*" & "?" - My gratitude to David Gilliam 
+for this great suggestion!</i><br><br>
+
+
+<b>
+ <Font Color=Maroon>Table=FileContent</Font><br>
+ FCSSig=&lt;Strings to look for in any new files found in the OMENS FileRoot/DirCheck directories or subdirectories&gt;<br>
+ FCSDsc=&lt;Description of Signature&gt;<br>
+ Share=&lt;Y | N&gt;<br>
+ Weight=&lt;Severity Of the Signature (0-99) - Note: 0 Means report only, No Action&gt;</b><br>
+
+OMENScan allows up to 9,999 signatures of text strings per database - To look for 
+in any new (or changed) files found in the <b>FileRoot/Dircheck</b> directories.
+This will help to alert IT security quickly that not only were new files placed on the 
+web server - but that those files contain known hostile signatures that may indicate they were
+placed there by a bad actor. <br><br>
+
+The <b>Share</b> entry allows granular sharing of signatures using OMENShare.  The <b>Weight</b> entry 
+allows each signature to have a severity level from 0-99. For signatures you simply want to report on - Make the
+<b>Weight</b> 0.  This will ensure that the signature does not cause OMENS to quarantine or report the signature
+as hostile. OMENS assumes that any signature with a <b>Weight</b> of 0 is informational only <br><br>
+
+<i><b>Note:</b> OMENS supports the wildcards "*" & "?" - My gratitude to David Gilliam 
+for this great suggestion!</i><br><br>
+
+
+
+
+
+<h2>A note about Signatures</h2>
+
+<p>
+  Signatures form the basis for OMENS scanning.  Typically these signatures are simple strings, 
+  but that may not always be the case.  To try to make OMENS scanning as robust and flexible as
+  possible several different meta-characters can be used to represent data to be searched.  Below
+  are the most common ones:<br><br>
+
+
+  1. * - Multiple character WildCard<br>
+  2. ? - Single character WildCard<br>
+  3. %nn - Where nn is a hex number. Search for a hex number.  For example %22 looks for 0x22<br>
+  3. %% - Look for the percent sign itself.  For example %%22 looks for the characters "%22"<br>
+
+</p><br>
+
+
+
+<h2>A note about Obfuscation and Base64 Encoding</h2>
+
+<p>
+  <b>OMENS/OMENScan </b> has a built in Code Obfuscation Detector. 
+</p>
+
+
+<p>
+  Very often bad guys will attempt to obfuscate their back-door code.  This is typically done 
+  using Base64 Encoding.  Sometimes that code is even further obfuscated by reversing or further 
+  modifying the Base64 encoding.
+</p>
+
+
+<p>
+  Detecting Base64 is extremely difficult.  And further obfuscation makes that process even 
+  harder.  However, I have implemented a fairly acurate detector to search for these common
+  methods of hiding hostile code.  The detector is a work in progress, and has pretty good detection
+  rates.  But it is not perfect.  I hope to continue refining the detector to improve it's
+  usefulness and detection acuracy.
+</p><br>
+
+
+
+<a name=OMENSAlrm></a>
+<h2>Alarms</h2><br>
+
+<b>
+ <Font Color=Maroon>Table=Alarms</Font><br>
+ LogMax=&lt;Max Log&gt;<br>
+ FileMax=&lt;Max Files&gt;<br>
+ AllMax=&lt;Max Total&gt;<br>
+ AlarmRun=&lt;AlarmBatchFile.bat&gt;</b><br>
+
+<p>OMENScan allows up to 10 Alarms to be set. Each alarm can be fired based on three different 
+parameters.  The fourth parameter is the name of the actual batch file to run</p>
+
+
+<p>For example:<p>
+
+<p>
+<b>
+ LogMax=1<br>
+ FileMax=2<br>
+ AllMax=3<br>
+ AlarmRun=AlarmBatchFile.bat
+</b>
+</p>
+
+<p>The first parameter is the THRESHOLD number of hostile signatures found in the Log File. 
+If the THRESHOLD is EXCEEDED the batch file will run.</p>
+
+<p>The second parameter is the THRESHOLD number of hostile Files found in the FileRoot/DirCheck
+directory and its subdirectories.  If the THRESHOLD is EXCEEDED the batch file will run.</p>
+
+<p>The third parameter is the THRESHOLD number of total hostile signatures (Logs and Files).
+If the THRESHOLD is EXCEEDED the batch file will run.</p>
+
+<p>The fourth parameter is the Batch file to run.  This batch file MUST be located in the 
+C:\OMENS directory.</p>
+
+
+<p>The logic for these thresholds is AND logic, so ALL conditions must be met.  For instance in 
+the above example: If more than 1 log entry AND more than 2 Files AND more than 3 total 
+signatures are found THEN C:\OMENS\AlarmBatchFile.bat will run</p>
+
+<p>In order to IGNORE one or more of the checks, make the value 0.  For Example:</p>
+
+<p>
+<b>
+ LogMax=0<br>
+ FileMax=0<br>
+ AllMax=3<br>
+ AlarmRun=AlarmBatchFile.bat
+</b>
+</p>
+
+
+<p>Will cause the alarm to be run if the Total signatures exceed 3.  The other two checks will 
+be ignored.</p>
+
+<p>Remember: Up to 10 alarms can be set, so separate, independent alarms can be setup for:<br><br>
+
+Logfile thresholds ONLY - <br>
+<b>
+ LogMax=&lt;Threshold Number&gt;<br>
+ FileMax=0<br>
+ AllMax=0<br>
+</b><br><br>
+
+
+File system thresholds ONLY - <br>
+<b>
+ LogMax=0<br>
+ FileMax=&lt;Threshold Number&gt;<br>
+ AllMax=0<br>
+</b><br><br>
+
+
+Total hostile signatures ONLY - <br>
+<b>
+ LogMax=0<br>
+ FileMax=0<br>
+ AllMax=&lt;Threshold Number&gt;<br>
+</b><br>
+
+<b><i>Or some combination of all of the above.</i></b>
+
+</p>
+
+
+<p>
+<b><i>Important Note:</i></b><br>
+OMENS is generally paranoid about itself.  This is because the server it is running on might 
+be compromised.  So OMENS Fingerprints its own files, including the Alarm Batch File(s).  If you 
+change an Alarm Batch File in any way, OMENS will no longer run it.  To tell OMENS these 
+modifications are OK, you will need to run <b>OMENS /Alarms</b>.  You do not need to make any
+changes.  Simply review each setting, press enter, and OMENS will then Re-Fingerprint all of the 
+OMENS Alarm Batch Files you have configured.
+</p><br>
+
+
+<a name=OMENSReg></a>
+<h2>Registry Keys (RegKeySig Table)</h2><br>
+
+<b>
+ <Font Color=Maroon>Table=RegKeySig</Font><br>
+ RegHive=&lt;Registry Hive&gt;<br>
+ RegKeyName=&lt;Registry Key Name&gt;<br>
+ RegKeyDesc=&lt;Registry Key Description&gt;</b><br>
+
+<p>
+  In some instances of web server compromise, the web server is actually the secondary target.
+</p>
+
+
+<p>
+  That is: The primary compromise is via some other attack vector, which usually installs a 
+  back-door trojan, some type of Remote Access Tool(RAT), or even a proxy server to allow
+  lateral movement through the network to other servers.  The web server compromise then 
+  follows the back-door trojan installation, which is used to upload a second back-door web 
+  interface/script.  The web back-door script almost always evades detection because it makes
+  the hostile actor's traffic appear as normal web server traffic to avoid IDS detection.  This is 
+  even more effective when done over SSL. And is the main reason I wrote OMENS.
+</p>
+
+
+<p>
+  What I find in many cases is that this initial Trojan or Remote Access Tool is often a well 
+  known, easily available program - which is either re-compiled by the bad guys with some changes, 
+  or just simply renamed.  This is done to prevent IDS or A/V signature detection.
+</p>
+
+
+<p>
+  Although renaming the program and/or modifying and re-compiling the source can be an effective 
+  countermeasure - The bad guys don't seem to remove the Registry Key Entries that the RATs 
+  and Trojans create. Why that is, I cannot say: An oversight maybe.  Or possibly they may not
+  even know the hostile software they are using actually writes out Registry Keys.
+</p>
+
+<p>
+  This is where OMENS can do some detection. Since the hostile programs Registry Keys are likely to be 
+  common across many different instances of the tool, OMENS can simply search for those common keys.
+</p>
+
+<p>
+  OMENS supports the following Hives:<br>
+  <b>HKEY_CLASSES_ROOT<br>
+     HKEY_CURRENT_CONFIG<br>
+     HKEY_CURRENT_USER<br>
+     HKEY_LOCAL_MACHINE<br>
+  </b>
+</p>
+
+
+<p>
+  The Registry Keys MUST match exactly (no wildcards allowed), and OMENS will not check the Registry 
+  Key values.  OMENS simply checks for the existence of the Registry Key.  This is really all we need 
+  to know to determine if a back-door tool was installed on the web server.
+</p>
+
+
+<p>
+  So, for instance to check for the TDSS RootKit we can use the following RegKeySig table entry in the OMENScan.db:<br>
+  <b>RegHive = HKEY_LOCAL_MACHINE<br>
+     RegKeyName = SOFTWARE/TDSS<br>
+     RegKeyDesc = Backdoor:W32/TDSS Trojan<br>
+  </b><br><br>
+
+
+  Another example would be the popular and commonly use Socks5 proxy called HTRAN:<br>
+  <b>RegHive = HKEY_LOCAL_MACHINE<br>
+     RegKeyName = SYSTEM\CurrentControlSet\Services\HTran<br>
+     RegKeyDesc = BKDR_LIONDOOR.I<br>
+  </b>
+
+</p>
+
+<p>
+  So although Registry Key Entries are not really the primary focus of OMENS scanning, I have added 
+  this capability because it can help detection in some cases.
+</p><br><br>
+
+
+
+
+<b>
+ <Font Color=Maroon>Table=Config</Font><br>
+ ParmKey=WGetIni<br>
+ ParmValue=&lt;URL Location of a Remote Ini File&gt;</b><br>
+
+<p>The OMENScan Config Table also allows the use of (up to 10) additional REMOTELY hosted (centralized) 
+.Ini <b>(WGetIni)</b> files.  
+This feature is designed to allow a security group to host one or more OMENScan Ini file(s)
+on a remote secure web server.  These remote configuration/signature files will be dynamically downloaded and 
+added to the scan. You do not need to code the HTTP:// part of the URL - It is automatically added.</p>
+
+<p>For Example:<br>
+ <b>
+ ParmKey=WGetIni<br>
+ ParmValue=security.company.com/OMENS/OMENSCentral.Ini
+ </b>
+</p>
+
+<p>The Remote OMENScan.ini file supports five(5) configuration parameters:<br>
+<b>Sig:</b> &lt;Hostile Log Scan Signatures&gt; : &lt;Description&gt; : Shr=&lt;Y | N&gt; : Wgt=&lt;Weight&gt;<br>
+<b>Not:</b> &lt;Log Scan False Positive Signatures&gt; : &lt;Description&gt;<br>
+<b>Fil:</b> &lt;Hostile File Names&gt; : &lt;Description&gt; : Shr=&lt;Y | N&gt; : Wgt=&lt;Weight&gt;<br>
+<b>FCS:</b> &lt;Hostile File Content Signatures&gt; : &lt;Description&gt; : Shr=&lt;Y | N&gt; : Wgt=&lt;Weight&gt;<br>
+<b>MD5:</b> &lt;Hostile File MD5 Hash&gt; : &lt;Description&gt; : Shr=&lt;Y | N&gt; : Wgt=&lt;Weight&gt;<br>
+
+</p>
+
+
+<p>This option can be critical for large organizations that have many web servers. By updating the 
+central OMENScan Ini file a security group can react quickly to a hostile attack by allowing
+OMENS to get ADDITIONAL signatures from a central location.  These signatures are ADDITIVE but
+must be EXCLUSIVE. In other words, the Local OMENSCan Ini file takes PRECEDENCE, but the remote 
+OMENScan Signature files can include additional signatures.</p>
+
+<p>This is done in real-time.  When OMENScan runs, it will try to HTTP download the remote 
+OMENScan Ini file(s) and add the signatures to the scan.  In this way OMENScan can be dynamically 
+updated to reflect changing conditions.</p>
+
+<p><i><b>Please Note: </b>Since OMENScan can be run with different Ini files, those Ini files 
+could call different Remote OMENScan.Ini files.  In this way many different configurations and scan 
+types can be setup. The possibilities are unlimited.</i></p>
+
+<p>My hope is that many organizations will host specific or unique signature files on their web 
+servers for the entire community.  My desire is to allow the OMENS user community to build their 
+own "webs of trust" so that expertise in certain areas can be leveraged by the entire community.<br><br>
+
+<b>What do I mean by that?</b><br>
+Well... What if a group of unique signatures has been discovered by one OMENS user from a new
+hacking group called the "XYZ123 Group"?  They could then create and XYZ123.ini file that 
+contains these unique signatures, host them on a public web server, and allow everyone to use 
+them.  Or, what if an OMENS user is an expert in ColdFusion attack vectors? They could create a 
+ColdFusion.ini file that contains all of these vectors and then share them with other OMENS ColdFusion 
+users by simply hosting the ColdFusion.ini on their public web server.<br><br> 
+
+I'm not a fan of the terms "Crowd Sourcing" or "Wisdom Of Crowds", but I must admit that these 
+are the best way to describe this OMENS capability.</p>
+
+<p>You may wonder why the Remote OMENScan.ini files are not protected or signed like  the local
+OMENScan.db files are.  Frankly, This was a 
+difficult decision to make.  On one hand it made sense to sign these remote files, and to create
+a password protection mechanism for them.  But that limits the platforms and circumstances of
+where they can be hosted.  By making the Remote OMENScan.ini files simple text files, they can be edited
+on any platform with a regular text editor, and they can be hosted on ANY web server - even 
+a free web hosting service.  These Remote OMENScan.ini files are just flat files that OMENS 
+"GETs" via regular HTTP 1.1.</p>
+
+<p>PLEASE BE VERY CAREFUL WITH THIS function!  A poorly thought out remote OMENScan.ini file
+can actually nullify a perfectly good Local OMENScan.db file.  Adding <b>Sig:</b>, <b>Fil:</b> 
+<b>MD5:</b> and <b>FCS:</b> signatures are pretty safe, but could affect ALARMS - causing them to fire.
+And adding remote <b>Not:</b> signatures should be avoided if possible.</p>
+
+<p>This is an extremely powerful capability, and it should be thought out and tested to 
+ensure that OMENScan is not adversely affected by any remotely added signatures.</p>
+
+
+<a name=OMENSDCry></a>
+<h2>OMENSDCry</h2>
+
+<p>
+  If you decide to encrypt your output log files (highly recommended) you can use OMENSDCry 
+  to decrypt them.  OMENSDCry
+  uses the ORIGINAL password (The one you use when you ran <b>OMENScan /MD5:&lt;Password&gt;</b>)
+  to create the interim HASH.  OMENSDCry will recreate the Interim HASH and then recreate the 
+  secondary HASH and pass that as input into OMENS stream cipher decryptor. Using this methodology 
+  prevents a hostile
+  actor from knowing your ORIGINAL password.  Even though a sufficiently skilled bad actor who gained
+  control of your server could read your OMENScan.db file, download the OMENScan program, get the 
+  Interim HASH, reverse engineer the Hashing algorithm, and then use the Interim HASH to decrypt your 
+  logfile.  However - At that point, they already own the system, and could read the source Log Files
+  anyway.
+</p>
+
+
+<p>
+  <b>The OMENSDCry has two command line parameters: </b>
+</p>
+
+
+<p>
+  <b>OMENSDCry /Log:</b>&lt;Name of the encrypted input Log File&gt; 
+           <b>/Pas:</b>&lt;Your Decryption Password&gt; 
+</p>
+
+
+<p><b>Obscure Note:</b><br>
+The OMENS encryption algorithm uses a PBKDF2 style mechanism to make decryption a little more difficult 
+for the bad guys.  If you don't know what PBKDF2 is, you probably don't really care.  But if you
+are concerned about this issue, please note that OMENS has a hidden parameter that allows you to 
+choose your own loop count.  Please contact me if you would like to increase the loop count for
+your OMENS configuration.  Changing this parameter complicates things a bit, but it can make it 
+much harder for the bad guys to decrypt your OMENScan output - By making the loopcount an unknown 
+(essentially adding a second password), AND decreasing the number of brute-force attempts that 
+can be tried in a reasonable time.
+</p>
+
+
+
+
+
+<h2>Version Number</h2>
+
+<p>
+  This is OMENS Release Version 1.00.<br><br>
+
+  Even though OMENS is a year and a half old, and is still a rapidly evolving program - I have decided
+  to release v1.00 at my BSidesLV talk. You should view OMENS with the proper suspicion of a new program.  
+  I am confident enough to use it daily on my systems, but I make no warranty that it will work properly
+  on your system(s).  Caveat Emptor!
+</p>
+
+
+
+<a name=OMENSource></a>
+<h2>OMENS Source Code</h2>
+
+<p>
+  In order to ensure that OMENS is as effective as possible, I have decided to make the OMENS Source Code 
+  available to a limited number of vetted and qualified security organizations.  If you are interested in 
+  the OMENS source code please send me an email.
+</p>
+
+
+<p>
+  Please be aware that in order to receive the OMENS Source Code, a responsible party will be required to 
+  sign an NDA (Non-Disclosure Agreement).  I am requiring this, in an attempt to help ensure that any 
+  sharing of OMENS source code does not put the rest of the OMENS user community at risk.   
+</p>
+
+
+<a name=OMENSPhilosophy></a>
+<h2>Some OMENS Philosophy (A trip into the weeds)</h2>
+
+<p>
+  This seems like a good place to talk a little about some of the design philosophy that governs how
+  I am developing OMENS.
+</p>
+
+
+<p>
+  OMENS is a C program. That is on purpose.
+</p>
+
+
+<p>
+  OMENS is designed to be as fast as possible, and I have purposely given the OMENS users choices 
+  to run either 1. faster or 2. more thorough (slower) checks.  This is because I realize that a 
+  program that is too slow and cumbersome just won't be used.  Especially a 
+  program that has to be run many times a day.  I have tried very hard to make sure I don't take
+  any dangerous programming shortcuts - but I am commited to creating the fastest program possible 
+  without sacrificing security. 
+</p>
+
+
+<p>
+  Originally I wrote OMENS in such a way that it involved a very manual security process: I wanted warnings to 
+  report over and over again until the security team physically went to the server and told OMENS
+  that the errors could be ignored.  I still believe that this is a good idea in theory.  And OMENS
+  can still be run in this fashion (manually fingerprinting, mapping, and signing the configuration 
+  database).  But I realize that this is not always practical.  So, for those OMENS users that 
+  cannot regularly, physically go to their servers, I have added features that allow OMENS to largely maintain
+  itself (when it is relatively safe to do so).  For example: Files can be auto-added to the File Root 
+  Map if they contain <b>NO</b> hostile signatures.  It must be your decision to weigh the benefits and risks 
+  of each approach. 
+</p>
+
+
+<p>
+  OMENS is self-contained.  To reconfigure OMENS you must go to the server and run the <b>OMENS.exe</b> program
+  using the proper command line option(s).  Creating a web based or remote management console is on 
+  my list of things to do, but I have not worked out how I can do this securely.  Eventually that 
+  piece will be completed.  But for now limiting the OMENS configuration vectors seems prudent. 
+  I highly recommend that <b>OMENS.exe</b> should never be permanently located on a server.  
+  <b>OMENS.exe</b> is really meant to be run to configure the database - or to be run from a USB
+  drive for forensic or investigative purposes.  All that is required to scan a server once it has
+  been configured is <b>OMENScan.exe</b> - which has had all of the OMENS configuration options removed.
+</p>
+
+
+<p>
+  Given OMENS propensity to be paranoid (even about itself), you may wonder why I chose such a simple 
+  format and method for Remote Signature files.  I admit this is an area of concern.  But to add an 
+  additional authentication layer, or a database requirement (like those in the Local OMENS database) on top of 
+  the Remote Signatures files greatly inhibits their use - To a fault.  Here is a case where I want
+  any Web Server on any platform to be able to host these Remote Signature files.  The idea is for
+  anyone and everyone to share their OMENS signatures.  If I can find an entirely cross-platform way to do 
+  this I will definately consider it.  But for now - any security person can edit a plain old text file, and 
+  make their signatures available to everyone by simply placing that text file on their web server.  
+  To protect or limit the use of these files please use your existing Operating System or Web Server 
+  permissions.  My hope is that this will break down the barriers to sharing hostile signatures and foster  
+  communities that can quickly and easily share actionable (yet fully sanitized) signatures with each other.
+</p>
+
+
+<p>
+  OMENS also assumes that the bad guys will eventually learn about its presence and capabilities.  This 
+  is just the nature of the Security Arms Race we are now experiencing.  OMENS contains many checks for
+  countermeasures that may or may not already exist.  This actually comprises quite a bit of the OMENS 
+  code.  I anticipate that OMENS counter-counter measures will continue to grow.  And my hope is that 
+  OMENS will not be overly burdened by this aditional overhead.
+</p>
+
+
+
+<a name=OMENSFuture></a>
+<h2>Where is OMENS going</h2>
+
+<p>
+  We all know that the sharing of security information, including analysis of compromises, benefits the 
+  security community as a whole.  
+</p>
+
+
+<p>
+  Unfortunately much of that benefit often gets lost in translation.
+</p>
+
+
+<p>
+  <b>With OMENS I am suggesting a new way to use, and benefit from compromise information and analysis.</b>
+</p>
+
+
+<p>
+  I've done this by creating a web based OMENS user community to collaborate on, and share useful 
+  compromise information.  This web site has the goal of enabling all OMENS users to learn from 
+  the security events experienced by members of the community, and 
+  to turn that information into signatures that OMENS users can then use to monitor and detect similar
+  hostile attacks or reconnaissance. I am hoping that the OMENS user community will 
+  use this space to work together - To boil down compromise information into simple OMENS signatures.  
+  And I am open to any suggestions on how to improve this ability.  I believe that OMENS is a fairly
+  pedestrian piece of software.  It's real value is using it as a framework to allow the security 
+  community to share actionable intelligence, and to be able to do that in real-time (via hosted Remote
+  OMENScan.ini files).  
+</p>
+
+
+<p>
+  OMENS signatures can be built from many different sources, including: Interesting new hostile strings 
+  found in Web Server Log Files, analysis of scripts that may have been uploaded by bad actors to 
+  your server(s), or even payload data captured by your IDS.
+</p>
+
+
+<p>
+  I am particularly interested in hostile scripts.  Whether it's Perl, JAVA, ASP, or any other web 
+  scripting/CGI language, I have found that every hostile script and/or attempted 
+  (or successful) breach has a <b>heart</b> to it:  The thing that makes it unique and devastatingly clever and 
+  effective.  It might be the hostile use of EVAL(), base-64 encoding, or even some type of bit-shifting 
+  pseudo-encryption.  But each script has an identifier that makes it unique.  Hackers are, after-all, 
+  Hackers - and cleverness is their stock-in-trade.
+</p>
+
+
+<p>
+  I would like to see the OMENS community help each other to boil this data down to simple generic signatures
+  that can be shared, and input into OMENS.  Eventually I would like to see different collections of signatures
+  that allow more targeted (and recursive) OMENS scans.  For instance, signatures specific to JAVA or Cold 
+  Fusion. Or even signatures known to be favored by a specific hacking group.
+</p>
+
+
+<p>
+  In this way we can help each other without actually sharing the details of each compromise. And we can share
+  <b>ACTIONABLE lessons-learned</b>.  We do not have to dig through a sanitized report of a system compromise 
+  to benefit from it's lessons.  Rather, a simple signature, or set of signatures can be built from each 
+  system compromise incident - That can help the OMENS community to better protect their systems by using 
+  OMENScan to detect similar activity on their systems.
+</p>
+
+
+<p>
+  The OMENS community web server is located at <a href=http://MuSecTech.com>http://MuSecTech.com</a>
+</p>
+
+
+<h2>Where is OMENS going II?</h2>
+
+<p>
+  As a solution, OMENS is still very nascent.  In fact you will see OMENS evolving in ways that might not
+  make a lot of sense.  This is because detection is only the beginning of where OMENS is headed.  Without 
+  getting into a whole discussion about the purpose and future of OMENS, let me just say that making 
+  detection quicker and more accurate (through community involvement), is only part of the solution. 
+</p>
+
+<p>
+  Once we adequately improve detection, OMENS will turn it's focus to automated blocking.  The foundations
+  for that next step are already in place.  For more information, please look at the OMENS
+  <b>BadHTML and BadIPLog</b> configuration options.
+</p>
+
+<p>
+  The problem with blocking is that it can be implemented in many ways, I am testing a few different approaches
+  on my server - but my solution(s) may not be generic enough for everybody.  My approach to resolving this will 
+  be to make OMENS blocking flexible, to publish my solution(s), and to encourage others in the community to publish 
+  their own solutions.  In this way OMENS can have multiple solutions to this problem that are more relevant
+  to the specific OS, Web Server, or Scripting Language used by each web site. 
+</p>
+
+<p>
+  To allow the security community to start testing and developing their own solutions on their own specific platforms, 
+  OMENS now writes out two data files: 1. A list of hostile IP Networks and 2. A list of Hostile Scripts/Files
+  found in the File Root.
+</p>
+
+<p>
+  By default the Hostile IP Address file is a simple list of hostile IP networks.  The default file name is:<br><br>
+
+  <b>C:\OMENS\Logs\BadIPAddr.log </b><br><br>
+
+  However, OMENS can also format this file as an IIS XML file or an Apache .htaccess file.<br><br>
+
+  When configured, these filenames will default to:<br><br>
+
+  <b>C:\OMENS\Logs\BadIPAddr.xml </b>  or <br>
+  <b>C:\OMENS\Logs\BadIPAddr.hta </b><br><br>
+
+  The File names can also be changed to any directory or filename by adding the full path to the <b>ParmParm</b> field 
+  in the OMENScan configuration database.<br><br>
+
+  For example: <b>C:\InetPub\WWWRoot\BadIPBlock.xml</b><br><br>
+
+
+  The network is always considered a "Class C" (255.255.255.0) subnet.<br>
+  <i>In the standard Log format the IP addresses will take the form of "nn.nn.nn." (without the last octet) so that 
+  any simple substring matching program can use the BadIPAddr.log file to block hostile subnets.</i>  
+</p>
+
+<p>
+  The Rules for which subnets are are output to the BadIPAddr.log are:
+  <ol>
+   <li> 1. The IP address is field 9 in the log file (fields must be separated by a blank (0x20)). <br>
+       To change this field number you must add the undocumented "ClientIPIndx" Configuration Parameter in the OMENS Config Database (and re-sign the Database).
+   <li> 2. The IP Address has had more than 25 occurrences of hostile signatures.
+   <li> 3. The IP Address has had at least one hostile signature in the last 30 days.
+   <li> 4. To except an IP address or subnet add it to the LogFileNot table in the OMENS Config Database (and re-sign the Database).
+  </ol>
+
+  <b>Please Note: </b><i> The BadIPAddr.log file is re-created every time OMENS/OMENScan is run and subnets that have not had 
+  any hostile activity in over 30 days are not written to the BadIPAddr.log.  However, if a single hostile hit is encountered, 
+  that subnet will be written to the BadIPAddr.log file for another 30 days.</i>    
+
+</p>
+
+<p>
+  The Hostile File/Script log file is named:<br><br>
+
+  <b>C:\OMENS\Logs\BadHTML.log </b><br><br>
+
+  Only the hostile file name is included in this file, NOT the full path.  This can, in some circumstances (two files
+  named the same in diferent directories) cause a false positive.  I am leaving it up to the implementors to 
+  detect these collisions.
+</p>
+
+<p>
+  The Rules for which Files/Scripts are output to the BadHTML.log are:
+  <ol>
+   <li> 1. The File/Script was New or Modified
+   <li> <b>AND</b>
+   <li> 2. The File/Script had at least one hostile signature in it.
+  </ol>
+
+  <b>Please Note: </b><i> The BadHTML.log file is re-created every time OMENS/OMENScan is run.</i>
+
+</p>
+
+
+<p>
+  OMENS can also take active action against these Hostile File/Script(s) instead of
+  logging them. <br><br>
+
+  OMENS can now hide these hostile files (Hidden Attribute - Only works with IIS), or Quarantine them 
+  into: <br><br> <b> C:\OMENS\Quar </b><br><br>
+
+  For more details about this capability see the information above about the <b>BadHTML</b>
+  Configuration Option. <br><br>
+
+Or take a look at my <a href="OBlockIIS.html"> Example Blocking Implementation Help File</a>
+
+</p>
+
+
+
+
+
+<hr>
+
+
+<p>
+  Stay Tuned...  OMENS still has a long way to go before it realizes its potential.
+</p>
+
+
+
+</div>
+	
+<div id="left">
+ <div class="box">
+  
+ <img src="OMENSLogo2.png" width=200px>
+
+
+  <h2>News :</h2>	
+
+  <p>02/26/2012 - Begin Clean Room version</p>
+  <p>02/26/2012 - Finish 0.01 Clean Room version with IISLogMail module.</p>
+  <p>02/27/2012 - Finish 0.02 Add Not: (False Positives)</p>
+  <p>02/28/2012 - Finish 0.03 Encrypt the Output via AESCrypt</p>
+  <p>02/29/2012 - Finish 0.04 Bug fixes </p>
+  <p>03/02/2012 - Finish 0.05 File System Scan & Rename tool to OMENS (Object Monitorfor Enhanced Network Security)</p>
+  <p>03/03/2012 - Created this OMENS help File</p>
+  <p>03/05/2012 - Finish 0.06 - File Scan too slow - Improved Code
+  <p>03/06/2012 - Finish 0.07 - Add Alarms
+  <p>03/09/2012 - Finish 0.20 - Added WGetIni (Centralized signatures) - OMENS is now Beta-2
+  <p>03/15/2012 - Finish 0.33 - Added File Mapping to check for new or deleted files
+  <p>03/21/2012 - Finish 0.34 - Added New File signature <b>FCS:</b> scanning
+  <p>03/24/2012 - Finish 0.35 - Added New Configuration File signing to detect tampering
+  <p>03/31/2012 - Finish 0.36 - Added <b>FCScan:All|New</b>, Writing files to the current working directory (<b>OMENS.exe</b> only), and Wildcard searching. Also changed the "Logscan" option code so that Resume/Reset is now based on configuration file name - so that <b>Logscan:</b> Resume/Reset will keep it's place differently for each configuration. (It was a busy weekend).
+  <p>05/06/2012 - Finish 0.39 - Add Syslog Output. 
+  <p>05/06/2012 - Finish 0.41 - Add <b>/Verbose</b> (Command Line) - for debugging, Add more detail to (CHG) Messages.
+  <p>08/05/2012 - Finish 0.55 - Many Changes! This is a New Fork of OMENS: Uses SQLIte for all data, add Auto-Update, Add <b>/Config</b> and <b>/Alarms</b> to Configure OMENS and Alarms, Add <b>/Passwd</b> to Reset the OMENS Hash/Password, Add <b>FCScan:Auto</b> - This option will auto-add and auto-delete New/Chg/Del files to allow OMENS to maintain itself.
+  <p>09/15/2012 - Finish 0.62 - Add Descriptions of Signatures - More info is better.  Add Xlate routine to enable Binary Comapares (<b>%nn</b> where nn is the hex number, and %% is just a %). Add PBKDF2 Config Parameter (Default is 1000).
+  <p>11/04/2012 - Finish 0.74 - Save Bad IP Addresses in the table with a bad count, then when complete, write out a new BlockedIP text file for input into a blocker - Like the OMENS Global.asax routine - But any program can be used! Write out a new BlockedHTML text file for input into a blocker - Like the OMENS Global.asax routine - But any program can be used!  Experimental Base64 detection - or Base64-ish obfuscation.   Sign OMENSExit and Alarm execution files as a countermeasure.  Check for the existence of Hostile Registry keys.
+  <p>11/12/2012 - Finish 0.80 - Improve Base64 detection.  Add <b>DeepDive</b> config parameter and <b>/DeepDive</b> command line option - Reports on ALL ACTIVITY by bad IP Addresses.
+  <p>01/18/2013 - Start  0.81 - Add <b>BadIPLog</b> config parameter for IP address blocking interface (Types are <b>Log, XML(Web.config), and HTA (.htaccess)</b>.
+  <p>01/25/2013 - Finish 0.81 - Add <b>BadHTML</b> config parameter for hostile file Quarantine (Types are <b>Log, Hide(Change the File Attribute to hidden (works with IIS)), and Quarantine.</b>.
+  <p>02/10/2013 - Finish 0.82 - Add <b>SMTPCC</b> To CC the OMENS Report. Also made some bug fixes.</b>.
+  <p>02/15/2013 - Finish 0.83 - Various bug fixes. Increased <b>SMTPCC</b> To 10 email addresses.</b>.
+  <p>03/10/2013 - Finish 0.84 - Add <b>/JIBMerge</b> parameter to import/Merge the CERT JIB into OMENS database. Fixed DST Bug. Add Hostile MD5 check for Malware Signatures from CERT JIB
+  <p>03/23/2013 - Finish 0.85 - Add <b>/OMNMerge</b> parameter to import/Merge the OMENS JIB into OMENS database. Added <b>MD5:</b> remote Signature.
+  <p>04/15/2013 - Finish 0.86 - OMENS can now process (load) up to 10 Remote Signature files per scan.
+  <p>06/30/2013 - Finish 1.00 - Improved /config option. Added new DirCheck configuration Option.  Added new OMENShare signature sharing parameter & table.
+  <p>06/30/2013 - Finish 1.15 - Added Granular Signature Sharing, and Signature Weighting.
+  <p>10/30/2013 - Finish 1.16 - Added MD5 checking with the VirusTotal service.
+  <p>11/20/2013 - Finish 1.17 - Added New Evasion Detection Engine. 
+  <p>02/01/2014 - Finish 1.18 - Bug Fix (When ClientIPIndx = 1).
+  <p>02/28/2014 - Finish 1.19 - IIS Doesn't like duplicated Block IPs.  Added Duplicate check to IPS file output. 
+  <p>04/12/2014 - Finish 2.01 - Now Check Logs for any badfile request.  Add more VirusTotal Integration.  New Field/Column search in Log file Parser. 
+  <p>05/16/2014 - Finish 2.05 - 2.x Bug Fixes and database integrity improvements. 
+  <p>12/31/2014 - Finish 2.10 - Integrate ShadowServer Bin-Check.
+  <p>02/14/2015 - Finish 2.11 - Improvements in DB code to prevent occasional hangs/abends. 
+  <p>04/04/2015 - Finish 2.12 - Fix Parsing bugs for non Web Logs.  Add clientIPIndx = -1. 
+ 
+
+
+ </div>
+			
+ <div class="box">
+  <h2>Links :</h2>
+  <ul>
+  <li><a href="http://www.mingw.org/">MingW C Compiler</a></li>
+  <li><a href="http://www.aescrypt.com/">AESCrypt</a></li>
+  </ul>
+ </div>
+		
+ <div class="box">
+  <div style="font-size: 0.8em;">Design by <a href="http://www.minimalistic-design.net">Minimalistic Design</a></div>
+ </div>
+</div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+This text file lists licenses and attributions to code that OMENS has used from public 
+sources:
+
+
+1.OMENS MD5 implementation
+The OMENS MD5 code was taken from - L. Peter Deutsch's (ghost@aladdin.com) implementation 
+of RFC 1321 (MD5).
+
+Heavy modifications were made to harden and to integrate the code with this OMENS.  But 
+credit for the original code belongs to Mr Deutsch.  My thanks for a wonderful piece of
+code!
+-----
+ 
+
+
+2. OMENS RC4 (ARC4) implementation:
+The OMENS RC4 encryption/decryption routine is covered by the Open Works License.  This is 
+the ONLY portion of OMENS covered by this license - The remainder of OMENS code is NOT 
+covered by the Open Works License.
+
+My thanks to Sterling Camden for this great piece of code. which can be found here:
+
+http://www.chipstips.com/?p=177
+
+
+The Open Works License follows below:
+
+# Open Works License
+
+This is version 0.7 of the Open Works License.
+
+## Terms
+
+Permission is hereby granted by the copyright holder(s), author(s), and contributor(s) of 
+this work, to any person who obtains a copy of this work, in any form, to reproduce, modify, 
+distribute, publish, sell, use, or otherwise deal in the licensed material without restriction, 
+provided the following conditions are met:
+
+1. Redistributions, modified or unmodified, in whole or in part, must retain the above 
+license notice, this list of conditions, and the following disclaimer.
+
+2. Redistributions, modified or unmodified, in whole or in part, must retain any applicable 
+notices of attribution and copyright.
+
+No warranty or guarantee is implied, or should be inferred, by this license or the act of 
+distribution under the terms of this license.  This license does not grant permission to use 
+the trade names, trademarks, service marks, product names, or other identifications used by 
+the licensor except as required for reasonable and customary use in reproducing, and 
+describing the origin or use of, the work.
+-----
+
+
+
+3. LibCurl
+OMENS uses the LibCurl library for it's HTTP functions.  LibCurl is one of the most amazing
+pieces of software I have ever used.  Simple, effective, and stable.  The LibCurl license is
+below:
+
+
+COPYRIGHT AND PERMISSION NOTICE
+ 
+Copyright (c) 1996 - 2012, Daniel Stenberg, <daniel@haxx.se>.
+ 
+All rights reserved.
+ 
+Permission to use, copy, modify, and distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright
+notice and this permission notice appear in all copies.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+Except as contained in this notice, the name of a copyright holder shall not
+be used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization of the copyright holder.
+-----
+
+
+4. SQLite
+All of the deliverable code in SQLite has been dedicated to the public domain by the authors. 
+All code authors, and representatives of the companies they work for, have signed affidavits 
+dedicating their contributions to the public domain and originals of those signed affidavits 
+are stored in a firesafe at the main offices of Hwaci. Anyone is free to copy, modify, 
+publish, use, compile, sell, or distribute the original SQLite code, either in source code 
+form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. 
+-----
+
+
+
+5. Various and Sundry:
+As I developed OMENS I searched for all types of examples of source code.  Many of them I 
+simply used to learn the concepts and coded the routines from that.  I have tried very hard to 
+attribute any code I used.  If I have missed anybody it was not intentional, and I would 
+be more than happy to add any attribution to this file.
+-----
+
+
+
+6. My License:
+The COMPILED version of OMENS is available to anybody and everybody provided that this 
+copyright notice and this permission notice appear in all copies and distributions.
+
+The OMENS software and configuration options are for use ONLY in protecting systems.  
+OMENS may not be reverse engineered, or otherwise modified or used in a manner to perform 
+any hostile action(s) against any computer systems.  OMENS is a defensive security tool, 
+and may only be used as such.  
+
+The OMENS source code may be made available to properly vetted organizations only.  This 
+is an unfortunate hazard of computer security software: That inadvertent sharing of the 
+source code with hostile entities may cause the software to be less effective. For this 
+reason, OMENS source code may not be share or copied, and may only made available by 
+the authorized maintainer(s) of the OMENS source code - Who are required to reasonably 
+vet any recipient of the OMENS source code, who in turn must sign a Non-Disclosure 
+agreement.
+
+This software is furnished "as-is". We provide no warranty whatsoever, whether express, 
+implied, or statutory, including, but not limited to, any warranty of merchantability or 
+fitness for a particular reason or purpose, or any warranty that the software will be 
+error-free.
+
+In no respect shall the author or distributors of OMENS incur any liability for any damages, 
+including, but not limited to, direct, indirect, special, or consequential damages arising 
+out of, resulting from, or any way connected to the use of this software, whether or not 
+based upon warranty, contract, tort, or otherwise; whether or not injury was sustained by 
+persons or property or otherwise; and whether or not loss was sustained from, or arose out 
+of, the results of, the software, or any services that may be provided by the software.
+
+You agree to install and use this software solely at your own risk.
+-----

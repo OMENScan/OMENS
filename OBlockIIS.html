@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>OMENS Blocking using IIS XML and file hiding</title>
+<link rel="stylesheet" type="text/css" href="OMENS.css" media="screen" />
+</head>
+<body>
+<div id="header">
+<h1>Object Monitor for Enhanced Network Security</h1>
+ <div id="menu">
+  <ul id="nav">
+  <ul id="nav">
+   <li><a href="OMENS.html"> Scan </a></li>
+   <li><a href="OBlockIIS.html"> Block </a></li>
+   <li><a href="OMENSApp.html"> Honey </a></li>
+  </ul>
+ </div>
+</div>
+<div id="content">
+<div id="right">
+
+
+
+<h2>OMENS Blocking 0.10</h2>
+
+
+<p>
+  The next phase of the OMENS project has now been completed and is ready for deployment: OMENS Blocking.
+</p>
+
+
+<p>
+  OMENS was always going to be a long term project.  Phase:1 Was the creation of a monitoring and
+  scanning tool to detect hostile activity.  Phase:2 is the creation of a flexible interface to allow
+  blocking of both hostile actors AND any hostile files that may have been uploaded to the 
+  server.  Phases:3 and 4 are still in the planning stages.  But rest assured these will eventually
+  also be implemented. They will be the most difficult to accomplish because they are not strictly 
+  technical in nature: More to come on that.
+</p>
+
+
+<p>
+ OMENS blocking philosophy is to leverage existing capabilities whenever it can.  To interface directly 
+ with existing native blocking technologies wherever they are available. And 
+ to avoid re-inventing the wheel. The Windows Operating System itself as well as both IIS and 
+ Apache already implement many ways to block hostile activity.  And although these 
+ existing capabilities have to be cajoled a little to work properly, they are extremely effective.  So 
+ rather than create an entirely new blockng system - OMENS simply interfaces with the existing 
+ OS, Web Server, and API capabilities.
+</p>
+
+
+<p>
+ I have tried to make the OMENS blocking interfaces as flexible as possible - so that each implementer
+ can decide the best way to block hostile activity in their environment.  That makes explaining the
+ blocking capabilities difficult - but allows the system itself to be very robust.  Rather than 
+ attempt to explain every possible combination of blocking capabilities in a single blog post, I 
+ will begin with exploring what I think will be the most common blocking method OMENS users will prefer: 
+ Blocking hostile
+ IP addresses and disabling hostile files using the existing capabilities of IIS on Windows.
+ I can only vouch for IIS 7.5, because that is the only version I have.  I would guess that other 
+ versions of IIS will work similarly - but to keep this blog post to a manageable size I will 
+ limit the scope to IIS 7.5.
+</p>
+
+
+
+<h2>Blocking Hostile IP Addresses</h2>
+
+
+<p>
+  OMENS can block hostile IP Addresses by leveraging the Built-In IIS <b>ipSecurity</b> configuration 
+  option.  This option is typically associated with the <b>Web.config</b> file.  But as we will see it can 
+  also be an external configuration file.  This external file is what OMENS will create
+  every time it runs, to tell IIS to block hostile IP addresses.
+</p>
+
+
+
+<p>
+ For an excellent and detailed explanation of this capability you can view Bose Jankulovski's
+ blog post at: <a href=http://boseca.blogspot.com/2010/12/programmatically-addremove-ip-security.html>
+ boseca.blogspot.com/2010/12/programmatically-addremove-ip-security.html</a> 
+</p>
+
+
+<p>
+  In a nutshell you will need to do 4 things:
+
+  <ul>
+   <li> <b>1.</b> Tell IIS it is OK to use an external file for ipSecurity</li>
+   <li> <b>2.</b> Change your Web.config file to point to the external ipSecurity configuration file</li>
+   <li> <b>3.</b> Configure OMENS to create the external ipSecurity configuration file </li>
+   <li> <b>4.</b> Tell OMENS to tell IIS to reload the configuration after it has written the file </li>
+  </ul> 
+</p>
+
+
+<p><br>
+  <b>1. Telling IIS it is OK to use an external file for ipSecurity</b><hr>
+ 
+  Microsoft has locked IIS 7.5 down pretty tight.  My kudos to them for this.  <br><br>
+
+  One of the things IIS disables by default is the ability to configure ipSecurity restrictions.  I would 
+  guess that Microsoft did this to prevent possible abuse. We will need this capability to Interface OMENS 
+  Blocking with IIS. That option can be enabled by changing a single setting in the file: <br><br>
+
+   <b>c:\Windows\system32\inetsrv\config\applicationHost.config</b><br><br>
+
+  Simply change the existing configuration option:<br><br>
+
+  From:<br>
+  <b> &lt; section name="ipSecurity" overrideModeDefault="Deny" / &gt; </b><br><br>
+
+  To:<br>
+  <b> &lt; section name="ipSecurity" overrideModeDefault="Allow" / &gt; </b><br><br>
+
+</p>
+
+
+
+<p><br>
+  <b>2. Changing your Web.config file to point to the external ipSecurity configuration file</b><hr>
+ 
+  Now that IIS has been configured to allow the inclusion of the ipSecurity restrictions. We can use the
+  Web.config file to tell IIS that an external file will contain the actual IP Address restictions.  
+  Typically the Web.config file will be in the Web Root. Often it is empty, but dependant upon your 
+  unique circumstances, there may already be configuration settings in your existing Web.config<br><br>
+
+  We will then add or modify the following section: <br><br>
+
+  <b>
+  &lt; configuration &gt; <br>
+  &lt; system.webServer &gt; <br>
+  &lt; security &gt; <br>
+  &lt; ipSecurity configSource="BadIPAddr.config" /  &gt; <br>
+  &lt; /security &gt; <br>
+  &lt; /system.webServer &gt; <br>
+  &lt; /configuration &gt; <br>
+  </b>
+  <br><br>
+
+  In this example I have configured the filename as <b>BadIPAddr.config</b>.  But you can give it 
+  any file name you like.  The file, however, MUST be in the SAME DIRECTORY as the <b>Web.config</b>
+  file. I recommend a file extension of <b>.config</b> because IIS will protect that file from
+  being accessed (served) to the web site users.
+
+</p>
+
+
+
+<p><br>
+  <b>3. Configuring OMENS to create the external ipSecurity configuration file</b><hr>
+ 
+  Now that IIS is configured to use an external ipSecurity restrictions file (<b>BadIPAddr.config</b>). 
+  We will need to tell OMENS to create that file every time it runs in a format that IIS can understand.  
+  OMENS will then keep track of hostile IP Addresses, add new hostile IP Addresses, as well as delete 
+  old (inactive) ones from <b>BadIPAddr.config</b> every time it runs.<br><br>
+
+  
+  To tell OMENS where to create the <BadIPAddr.config</b> file, we must modify the <b>BadIPLog</b>
+  option in the OMENS configuration database.  The easiest way to do this is to use an SQLite3 editor. 
+  But you can also modify the database by using the SQLite3 command line utility that comes with SQLite.<br><br>
+
+  In our example we will set the <b>BadIPLog</b> option to <b>XML</b> and tell OMENS to write the file
+  at <b>C:\inetpub\wwwroot\BadIPAddr.config</b>. The SQLite commands would look like this:<br><br>
+
+  <b>
+  SQLite3 OMENScan.db "Delete From Config Where ParmKey='BadIPLog'"
+  <br>
+  SQLite3 OMENScan.db "INSERT INTO Config VALUES(NULL,'BadIPLog','XML','C:\inetpub\wwwroot\BadIPAddr.config',NULL)"
+  </b>
+  <br><br>
+
+  In this example I have configured the filename as <b>BadIPAddr.config</b>.  But you can give it 
+  any file name you like.  The file, however, MUST be written to the SAME DIRECTORY as the <b>Web.config</b>
+  file. I recommend a file extension of <b>.config</b> because IIS will protect that file from
+  being accessed (served) to the web site users.
+
+</p>
+
+
+<p>
+<b>
+ <i>
+  IMPORTANT NOTE: </b> you MUST re-sign the OMENS configuration file after making these changes using the 
+  <b>OMENS /Sign</b> command line option.
+ </i>
+</p>
+
+
+
+<p><br>
+  <b>4. Telling OMENS to tell IIS to reload the configuration after it has written the file</b><hr>
+ 
+  There are a few ways to do this.  You can reload Web.config nightly or via the <b>IISReset</b>
+  command in the Windows Scheduler.  But OMENS provides another option:  After OMENS runs, it
+  will execute a configurable command or Batch File. By Default, this command is: <br><br>
+
+  <b>C:\OMENS\OMENSExit.bat</b><br><br>
+
+  But the program name or batch file name can be changed via the OMENS configuration file.  In our
+  example, I would simply modify the existing OMENSExit.bat file to execute the IIS <b>appcmd&#46;exe</b> 
+  to reload the default application pool.<br><br>
+
+  <b>
+   C:\windows\System32\Inetsrv\appcmd&#46;exe recycle apppool DefaultAppPool   
+  </b>
+  <br><br>
+</p>
+
+
+<p>
+<b>
+ <i>
+  IMPORTANT NOTE: </b> you MUST re-fingerprint the OMENSExit.bat file after modifying it by using the 
+  <b>OMENS /Config</b> command line option.  You do not have to change anything, but to prevent tampering
+  OMENS will make you review your settings.  It will then re-fingerprint the external OMENS files. 
+ </i>
+</p>
+
+
+
+<hr><hr><br>
+
+
+<h2>Blocking Hostile files (scripts/etc...)</h2>
+
+
+<p>
+  I have also tried to make OMENS hostile file blocking flexible - so that it can also take many forms.  
+  This is, again, to allow many different implementations dependent upon individual needs.  In this 
+  example we will use OMENS file Hiding to block hostile files.  IIS honors the hidden attribute, while 
+  some Windows Web Servers do not.  So we will configure OMENS to set the Hidden File Attribute on any
+  file it finds with hostile content.
+</p>
+
+
+<p>
+  To do this, we must modify the <b>BadHTML</b> option in the OMENS configuration database.  The easiest 
+  way to do this is to use an SQLite3 editor. 
+  But you can also modify the database by using the SQLite3 utility that comes with SQLite.<br><br>
+
+  In our example we will set the <b>BadHTML</b> option to <b>Hide</b>. The SQLite commands would look 
+  like this:<br><br>
+
+  <b>
+  SQLite3 OMENScan.db "Delete From Config Where ParmKey='BadHTML'"
+  <br>
+  SQLite3 OMENScan.db "INSERT INTO Config VALUES(NULL,'BadHTML','Hide',NULL,NULL)"
+  </b>
+  <br><br>
+</p>
+
+
+
+<p>
+  Once this option is set, OMENS will set the Hidden Attribute for any file that contains hostile content.
+  If a client attempts to request that file from the IIS, they will get a <b>404.9 - Hidden File </b>
+  Error message:<br><br>
+</p>
+
+
+
+<hr><hr><br>
+
+
+<h2>More Options...</h2>
+
+
+<p>
+  This post outlines only two of the OMENS blocking options.  For those running other Web Servers, or 
+  that might prefer different blocking methods, please check the OMENS help file, which shows other 
+  option settings..
+</p>
+
+
+
+</div>
+	
+<div id="left">
+ <div class="box">
+
+ <img src="OMENSLogo2.png" width=200px>
+
+  <h2>News :</h2>	
+
+  <p>02/26/2012 - Begin Clean Room version</p>
+  <p>02/26/2012 - Finish 0.01 Clean Room version with IISLogMail module.</p>
+  <p>02/27/2012 - Finish 0.02 Add Not: (False Positives)</p>
+  <p>02/28/2012 - Finish 0.03 Encrypt the Output via AESCrypt</p>
+  <p>02/29/2012 - Finish 0.04 Bug fixes </p>
+  <p>03/02/2012 - Finish 0.05 File System Scan & Rename tool to OMENS (Object Monitorfor Enhanced Network Security)</p>
+  <p>03/03/2012 - Created this OMENS help File</p>
+  <p>03/05/2012 - Finish 0.06 - File Scan too slow - Improved Code
+  <p>03/06/2012 - Finish 0.07 - Add Alarms
+  <p>03/09/2012 - Finish 0.20 - Added WGetIni (Centralized signatures) - OMENS is now Beta-2
+  <p>03/15/2012 - Finish 0.33 - Added File Mapping to check for new or deleted files
+  <p>03/21/2012 - Finish 0.34 - Added New File signature <b>FCS:</b> scanning
+  <p>03/24/2012 - Finish 0.35 - Added New Configuration File signing to detect tampering
+  <p>03/31/2012 - Finish 0.36 - Added <b>FCScan:All|New</b>, Writing files to the current working directory (<b>OMENS.exe</b> only), and Wildcard searching. Also changed the "Logscan" option code so that Resume/Reset is now based on configuration file name - so that <b>Logscan:</b> Resume/Reset will keep it's place differently for each configuration. (It was a busy weekend).
+  <p>05/06/2012 - Finish 0.39 - Add Syslog Output. 
+  <p>05/06/2012 - Finish 0.41 - Add <b>/Verbose</b> (Command Line) - for debugging, Add more detail to (CHG) Messages.
+  <p>08/05/2012 - Finish 0.55 - Many Changes! This is a New Fork of OMENS: Uses SQLIte for all data, add Auto-Update, Add <b>/Config</b> and <b>/Alarms</b> to Configure OMENS and Alarms, Add <b>/Passwd</b> to Reset the OMENS Hash/Password, Add <b>FCScan:Auto</b> - This option will auto-add and auto-delete New/Chg/Del files to allow OMENS to maintain itself.
+  <p>09/15/2012 - Finish 0.62 - Add Descriptions of Signatures - More info is better.  Add Xlate routine to enable Binary Comapares (<b>%nn</b> where nn is the hex number, and %% is just a %). Add PBKDF2 Config Parameter (Default is 1000).
+  <p>11/04/2012 - Finish 0.74 - Save Bad IP Addresses in the table with a bad count, then when complete, write out a new BlockedIP text file for input into a blocker - Like the OMENS Global.asax routine - But any program can be used! Write out a new BlockedHTML text file for input into a blocker - Like the OMENS Global.asax routine - But any program can be used!  Experimental Base64 detection - or Base64-ish obfuscation.   Sign OMENSExit and Alarm execution files as a countermeasure.  Check for the existence of Hostile Registry keys.
+  <p>11/12/2012 - Finish 0.80 - Improve Base64 detection.  Add <b>DeepDive</b> config parameter and <b>/DeepDive</b> command line option - Reports on ALL ACTIVITY by bad IP Addresses.
+  <p>01/18/2013 - Start  0.81 - Add <b>BadIPLog</b> config parameter for IP address blocking interface (Types are <b>Log, XML(Web.config), and HTA (.htaccess)</b>.
+  <p>01/25/2013 - Finish 0.81 - Add <b>BadHTML</b> config parameter for hostile file Quarantine (Types are <b>Log, Hide(Change the File Attribute to hidden (works with IIS)), and Quarantine.</b>.
+  <p>02/10/2013 - Finish 0.82 - Add <b>SMTPCC</b> To CC the OMENS Report. Also made some bug fixes.</b>.
+  <p>02/15/2013 - Finish 0.83 - Various bug fixes. Increased <b>SMTPCC</b> To 10 email addresses.</b>.
+  <p>03/10/2013 - Finish 0.84 - Add <b>/JIBMerge</b> parameter to import/Merge the CERT JIB into OMENS database. Fixed DST Bug. Add Hostile MD5 check for Malware Signatures from CERT JIB
+  <p>03/23/2013 - Finish 0.85 - Add <b>/OMNMerge</b> parameter to import/Merge the OMENS JIB into OMENS database. Added <b>MD5:</b> remote Signature.
+  <p>04/15/2013 - Finish 0.86 - OMENS can now process (load) up to 10 Remote Signature files per scan.
+  <p>06/30/2013 - Finish 1.00 - Improved /config option. Added new DirCheck configuration Option.  Added new OMENShare signature sharing parameter & table.
+  <p>06/30/2013 - Finish 1.15 - Added Granular Signature Sharing, and Signature Weighting.
+  <p>10/30/2013 - Finish 1.16 - Added MD5 checking with the VirusTotal service.
+  <p>11/20/2013 - Finish 1.17 - Added New Evasion Detection Engine. 
+  <p>02/01/2014 - Finish 1.18 - Bug Fix (When ClientIPIndx = 1).
+  <p>02/28/2014 - Finish 1.19 - IIS Doesn't like duplicated Block IPs.  Added Duplicate check to IPS file output. 
+  <p>04/12/2014 - Finish 2.01 - Now Check Logs for any badfile request.  Add more VirusTotal Integration.  New Field/Column search in Log file Parser. 
+  <p>05/16/2014 - Finish 2.05 - 2.x Bug Fixes and database integrity improvements. 
+
+
+ </div>
+			
+ <div class="box">
+  <h2>Links :</h2>
+  <ul>
+  <li><a href="https://www.facebook.com/pages/Saucy-Jack/201831369837675">Facebook: Saucy Jack</a></li>
+  <li><a href="http://www.oswd.org/">Open Source Web Design</a></li>
+  <li><a href="http://www.mingw.org/">MingW C Compiler</a></li>
+  </ul>
+ </div>
+		
+ <div class="box">
+  <div style="font-size: 0.8em;">Design by <a href="http://www.minimalistic-design.net">Minimalistic Design</a></div>
+ </div>
+</div>
+</div>
+
+</body>
+
+</html>

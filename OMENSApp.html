@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>OMENS Blocking using IIS XML and file hiding</title>
+<link rel="stylesheet" type="text/css" href="OMENS.css" media="screen" />
+</head>
+<body>
+<div id="header">
+<h1>Object Monitor for Enhanced Network Security</h1>
+ <div id="menu">
+  <ul id="nav">
+  <ul id="nav">
+   <li><a href="OMENS.html"> Scan </a></li>
+   <li><a href="OBlockIIS.html"> Block </a></li>
+   <li><a href="OMENSApp.html"> Honey </a></li>
+  </ul>
+ </div>
+</div>
+<div id="content">
+<div id="right">
+
+
+
+<h2>OMENSApp HoneyApp 0.45</h2>
+
+
+<p>
+  Do you see a lot of probes in your logs for Web applications or CMS systems written in 
+  scripting languages that are not even installed on your server?  Things like 
+  <b>WP-ADMIN.PHP or LOGIN.JSP</b>.
+</p>
+
+
+<p>
+ It happens to me all the time.  I get hundreds. Nay, THOUSANDS of probes for WordPress, PHP, 
+ and other known vulnerable scripts that aren't even on my server.  I could just ignore them.  
+ After-all they just issue a 404 error. But I got to thinking...
+</p>
+
+
+<p>
+ Why not intercept those probes, log them, and then block the IP address if there are more than
+ a couple attempts?  After-all, there might be some good intel in those probes.  
+</p>
+
+
+<p>
+ That's why I created OMENSApp.  It's just a fake scripting language that you can assign to any
+ filetype in your web server.  Want to intercept PHP requests because you don't even have PHP
+ on your server?  Just configure your web server to use OMENSApp for .PHP files.  It works just
+ as well for .CFM, .JSP, .PL, or anthing else. And since OMENSApp uses the OMENS database to 
+ log the IP address information, you can use OMENScan to not only generate a block file for 
+ your web server, but to share those IP addresses with your other OMENS servers using OMENShare!
+</p>
+
+
+<p>
+ Now you can go beyond just the 404 messages in your log.  OMENSApp will log Cookies, GET, and POST 
+ data. To give you more information than you usually find in just looking at the web server logs.  If
+ a 404 message is OK with you, OMENSApp probably isn't your cup of tea.  But if you ever wondered
+ what else might be in those requests, OMENSApp can tell you. And can block those hostile IP addresses
+ if they make more than a few (5) requests.
+</p>
+
+
+<h2>Setting up OMENSApp on IIS 7</h2>
+
+
+<p>
+ To use OMENSApp you must configure your web server to use OMENSAPP as the scripting language 
+ for the URL requests you want to intercept.  For Instance: If you don't have PHP on your IIS 7 
+ web server but you want to intercept any PHP requests - do the following
+
+ <ol>
+  <li>Ensure CGI is enabled:
+  <li> 1. Control Panel > Programs and Features
+  <li> 2. Turn Windows features on or off
+  <li> 3. World Wide Web Service
+  <li> 4. Application Development Features
+  <li> 5. CGI
+ </ol>
+
+
+Then add OMENSApp to the Handle Mapping for PHP
+ <ol>
+  <li> Internet Information Services (IIS) Manager
+  <li> 1. Handler Mappings
+  <li> 2. Add Script Map
+  <li> 3. *.PHP
+  <li> 4. CgiModule
+ </ol>
+ 
+</p>
+
+
+<h2>OMENSApp Database</h2>
+
+<p>
+ OMENSApp will use <b>C:\OMENS\DB\OMENScan.db</b> to store the hostile IP addresses.  When you 
+ run your typical OMENScan (if configured for blocking), OMENScan will then write out those 
+ IP Addresses into an IP block file.  This will usually require 4 or more attempts by a bad actor.
+ This is done to make sure a single accidental typo doesn't cause someone to be blocked.  I admit
+ that is unlikely, but if a bad guy tries once to probe for a vulnerable script, they are likely 
+ to try several more times.  And 4 attempts seems like a low enough threshold.
+</p>
+
+
+<h2>OMENSApp Logfile</h2>
+
+<p>
+ OMENSApp will write a logfile to <b>C:\OMENS\DB\OMENSApp-&lt;yyyymmdd&gt;.log</b> where it will
+ store the hostile data from the request.  This includes all kinds of information like IP Address, 
+ Script they attempted to run, Cookies, URL and POST data.
+</p>
+
+
+<p>
+ Keep in mind, the script files don't have to exist.  OMENSApp will pretend like every script 
+ requested is there.
+</p>
+
+
+<h2>OMENSApp HTML Output</h2>
+
+<p>
+ Since OMENSApp is emulating an actual script running, it will send a web page to the requestor,
+ That web page can be written by you.  The HTML output can be created in 
+ <b>C:\OMENS\DB\OMENSApp.html</b>
+</p>
+
+
+<p>
+ If you would like to to be more creative. Like write an entire Honey Pot application using 
+ OMENSApp - Or if you simply want to write individual and unique web pages for certain OMENSApp 
+ requests, you can add these web pages into to the <b>C:\OMENS\App\</b> directory.  The web  
+ pages you want to mimic will have the same file name as the URL request.  So for instance: 
+ If you want to code a special OMENSApp reply page for <b>Admin.PHP</b> simply create a web 
+ page in <b>C:\OMENS\App\Admin.PHP</b>. This web page will then be returned by any URL 
+ request for <b>Admin.PHP</b>. 
+</p>
+
+
+
+<h2>Persistence Cookie</h2>
+
+
+<p>
+  OMENSApp will add a Tracking Cookie called <b>passw</b>.  This helps track requests from
+  the attacking browser, even if they change their IP Address.  This is not meant to be 
+  perfect, but if an attacker makes several requests and does not clear their Cookies, 
+  this can help tie the requests together.
+</p>
+
+
+
+
+<h2>Blocking Hostile IP Addresses</h2>
+
+
+<p>
+ To do the actual blocking you will need to configure and run OMENScan. You can check the
+ OMENS Blocking help file for instructions on how to setup blocking.
+</p>
+
+
+
+</div>
+	
+<div id="left">
+ <div class="box">
+
+ <img src="OMENSLogo2.png" width=200px>
+
+  <h2>News :</h2>	
+
+  <p>08/16/2013 - Finish 0.10 Basic Functionality</p>
+  <p>08/23/2013 - Finish 0.20 Better Error Handling.</p>
+  <p>09/26/2013 - Finish 0.30 Allow more Flexible Customized HTML Pages.</p>
+  <p>09/27/2013 - Finish 0.35 Add Persistence Cookie.</p>
+  <p>05/15/2014 - Finish 0.45 Slower but more reliable Database Code.</p>
+
+
+ </div>
+			
+ <div class="box">
+  <h2>Links :</h2>
+  <ul>
+  <li><a href="https://www.facebook.com/pages/Saucy-Jack/201831369837675">Facebook: Saucy Jack</a></li>
+  <li><a href="http://www.oswd.org/">Open Source Web Design</a></li>
+  <li><a href="http://www.mingw.org/">MingW C Compiler</a></li>
+  </ul>
+ </div>
+		
+ <div class="box">
+  <div style="font-size: 0.8em;">Design by <a href="http://www.minimalistic-design.net">Minimalistic Design</a></div>
+ </div>
+</div>
+</div>
+
+</body>
+
+</html>
